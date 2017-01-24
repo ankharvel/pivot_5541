@@ -1,0 +1,19 @@
+* text=crlf
+
+*.css text
+*.csv text
+*.htm text
+*.html text
+*.xhtml text
+*.java text
+*.js text
+*.jsp text
+*.txt text
+*.xml text
+*.MF text
+
+*.properties binary
+*.sql text binary
+
+*.gif binary
+*.jar binary
