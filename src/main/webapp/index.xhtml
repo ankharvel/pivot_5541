@@ -14,24 +14,29 @@
         <p:layout fullPage="true">
 
             <p:layoutUnit id="topPanel" position="north" size="100" resizable="true" closable="false" collapsible="false">
-                <h:outputText value="#{msg.title}" />
-                <h:outputLabel value="#{msg.project}"/>
+                <p:panelGrid columns="3" layout="grid">
+                    <h:outputText value="" />
+                    <p:panelGrid columns="1" layout="grid">
+                        <h:outputText value="#{msg.title}" />
+                        <h:outputText value="#{msg.project}" />
+                    </p:panelGrid>
+                    <h:outputText value="" />
+                </p:panelGrid>
             </p:layoutUnit>
 
-            <p:layoutUnit position="south" size="100" resizable="true" closable="true" collapsible="true">
+            <p:layoutUnit id="bottomPanel" position="south" size="100" resizable="true" closable="true" collapsible="true">
             </p:layoutUnit>
 
             <p:layoutUnit position="west" size="200" header="Options" resizable="true" closable="false" collapsible="true">
             </p:layoutUnit>
 
-            <p:layoutUnit position="east" size="200" header="Files" resizable="true" closable="true" collapsible="true" effect="drop">
+            <p:layoutUnit position="east" size="300" header="Criteria" resizable="true" closable="true" collapsible="true" effect="drop">
             </p:layoutUnit>
 
             <p:layoutUnit position="center">
                 <h:form>
                     <p:fileUpload fileUploadListener="#{fileUploadBean.fileUploadListener}" mode="advanced" dragDropSupport="false"
                                   update="messages" sizeLimit="100000000" allowTypes="/(\.)(txt|TXT|csv|CSV)$/" />
-
                     <p:growl id="messages" showDetail="true" />
                 </h:form>
             </p:layoutUnit>
