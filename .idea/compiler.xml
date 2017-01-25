@@ -17,16 +17,25 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
-      <profile default="false" name="Annotation profile for pivot" enabled="true">
+      <profile default="false" name="Annotation profile for pivot-server" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="pivot" />
+        <module name="pivot-server" />
+      </profile>
+      <profile default="false" name="Annotation profile for pivot-client" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pivot-client" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="pivot" target="1.8" />
+      <module name="pivot-client" target="1.8" />
+      <module name="pivot-server" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

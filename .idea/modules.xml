@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/pivot.iml" filepath="$PROJECT_DIR$/pivot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pivot-client/pivot-client.iml" filepath="$PROJECT_DIR$/pivot-client/pivot-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pivot-server/pivot-server.iml" filepath="$PROJECT_DIR$/pivot-server/pivot-server.iml" />
     </modules>
   </component>
 </project>
