@@ -1,29 +1,31 @@
-package net.sweng.context;
+package net.sweng.conf;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import java.io.File;
 import java.util.logging.Logger;
 
 /**
- * This class is executed once the feces context is initialized and delete all temporal files
+ * This class is executed once the context is initialized and delete all temporal files
  * Created by oscar on 1/23/17.
  */
-@ManagedBean(eager = true)
-@ApplicationScoped
-public class InitializeContext {
+@Component
+public class ResourceHandler {
 
-    private static final Logger logger = Logger.getLogger(InitializeContext.class.getName());
+    private static final Logger logger = Logger.getLogger(ResourceHandler.class.getName());
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @PostConstruct
     private void removeTemps() {
-        ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
-        String tmpPath = ctx.getRealPath("/WEB-INF/tmp");
+        Resource tmpPath = applicationContext.getResource("/WEB-INF/tmp");
         try {
-            File tmp = new File(tmpPath);
+            File tmp = tmpPath.getFile();
             if(tmp.isDirectory()) {
                 File[] files = tmp.listFiles();
                 for(File child: files) {
