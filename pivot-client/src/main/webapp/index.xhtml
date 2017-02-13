@@ -1,10 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-        xmlns:f="http://java.sun.com/jsf/core">
-    <f:loadBundle basename="net.sweng.index" var="msg"/>
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <f:loadBundle basename="messages" var="msg"/>
     <h:head>
         <title>Pivot Table</title>
         <link href="./css/styles.css" rel="stylesheet" type="text/css"/>
@@ -14,31 +15,56 @@
         <p:layout fullPage="true">
 
             <p:layoutUnit id="topPanel" position="north" size="100" resizable="true" closable="false" collapsible="false">
-                <p:panelGrid columns="3" layout="grid">
-                    <h:outputText value="" />
-                    <p:panelGrid columns="1" layout="grid">
-                        <h:outputText value="#{msg.title}" />
-                        <h:outputText value="#{msg.project}" />
-                    </p:panelGrid>
-                    <h:outputText value="" />
+                <p:panelGrid columns="1" layout="grid">
+                    <h:outputText value="#{msg.title}" />
+                    <h:outputText value="#{msg.project}" />
                 </p:panelGrid>
             </p:layoutUnit>
 
             <p:layoutUnit id="bottomPanel" position="south" size="100" resizable="true" closable="true" collapsible="true">
-            </p:layoutUnit>
-
-            <p:layoutUnit position="west" size="200" header="Options" resizable="true" closable="false" collapsible="true">
-            </p:layoutUnit>
-
-            <p:layoutUnit position="east" size="300" header="Criteria" resizable="true" closable="true" collapsible="true" effect="drop">
+                <h4>
+                    <h:outputText value="#{msg.season}" styleClass="ui-title"/>
+                </h4>
             </p:layoutUnit>
 
             <p:layoutUnit position="center">
+                <h:panelGrid rendered="#{menuBean.uploadFileEnable}">
+                    <ui:include src="snippets/load_file.xhtml"/>
+                </h:panelGrid>
+
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" size="250" header="Options" resizable="true" closable="false" collapsible="true">
                 <h:form>
-                    <p:fileUpload fileUploadListener="#{fileUploadBean.fileUploadListener}" mode="advanced" dragDropSupport="false"
-                                  update="messages" sizeLimit="100000000" allowTypes="/(\.)(txt|TXT|csv|CSV)$/" />
-                    <p:growl id="messages" showDetail="true" />
+                    <p:growl id="messages" showDetail="true"/>
+                    <p:menu styleClass="options-menu" toggleable="true">
+                        <p:submenu label="#{msg.menu_import_data}">
+                            <p:menuitem value="#{msg.submenu_from_file}" actionListener="#{menuBean.uploadFromFile}"
+                                        icon="fa fa-file-text" ajax="false"/>
+                            <p:separator/>
+                            <p:menuitem value="#{msg.submenu_from_database}" actionListener="#{menuBean.uploadFromDatabase}"
+                                        icon="fa fa-database" ajax="false"/>
+                        </p:submenu>
+                        <p:submenu label="#{msg.menu_configure}">
+                            <p:menuitem value="#{msg.submenu_set_range}" actionListener="#{menuBean.selectRange}"
+                                        icon="fa fa-expand" ajax="false"/>
+                            <p:separator/>
+                            <p:menuitem value="#{msg.submenu_set_relations}" actionListener="#{menuBean.setRelations}"
+                                        icon="fa fa-group" ajax="false"/>
+                        </p:submenu>
+                        <p:submenu label="#{msg.menu_report}">
+                            <p:menuitem value="#{msg.submenu_generate}" actionListener="#{menuBean.generate}"
+                                        icon="fa fa-cubes" ajax="false"/>
+                            <p:separator/>
+                            <p:menuitem value="#{msg.submenu_export}" actionListener="#{menuBean.export}"
+                                        icon="fa fa-download" ajax="false"/>
+                        </p:submenu>
+                    </p:menu>
                 </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="east" size="300" header="Criteria" resizable="true" closable="true" collapsible="true" effect="drop">
+                <h1>_</h1>
             </p:layoutUnit>
 
         </p:layout>

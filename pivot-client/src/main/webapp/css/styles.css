@@ -3,6 +3,10 @@ body {
     padding: 0;
 }
 
+.ui-widget .ui-widget {
+    font-size: 0.95em;
+}
+
 #topPanel .ui-layout-unit-content.ui-widget-content {
     background-color: #2F4E6F;
 }
@@ -14,6 +18,12 @@ body {
     border-color: rgba(0,0,0,0);
     color: #cccccc;
     padding-top: 2px;
+}
+
+.ui-title {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    color: #cccccc;
 }
 
 #bottomPanel .ui-layout-unit-content.ui-widget-content {
@@ -64,6 +74,30 @@ body {
     border-top-width: 0;
     background: transparent;
     border: hidden;
+}
+
+.ui-growl {
+    top: 45%;
+    right: 45%;
+}
+
+.options-menu {
+    margin: 0%;
+    width: 94%;
+}
+
+.ui-menu {
+    background: linear-gradient(ghostwhite, #CFD6DE);
+}
+
+.ui-menu .ui-menu-list .ui-widget-header {
+    background: linear-gradient(ghostwhite, #ADC1D6);
+}
+
+.ui-menu .ui-menuitem-link .ui-menuitem-icon, .ui-menu .ui-submenu-icon {
+    color: #2F4E6F;
+    font-size: 0.6em;
+    margin-right: 6px;
 }
 
 .error {
