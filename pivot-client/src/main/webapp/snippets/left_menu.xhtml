@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="leftMenu">
+        <p:growl id="messages" showDetail="true"/>
+        <p:menu styleClass="options-menu" toggleable="true">
+            <p:submenu label="#{msg.menu_import_data}">
+                <p:menuitem id="uploadFile" value="#{msg.submenu_from_file}" actionListener="#{menuController.uploadFromFile}"
+                            icon="fa fa-file-text" ajax="false"/>
+                <p:separator/>
+                <p:menuitem value="#{msg.submenu_from_database}" actionListener="#{menuController.uploadFromDatabase}"
+                            icon="fa fa-database" ajax="false"/>
+            </p:submenu>
+            <p:submenu label="#{msg.menu_configure}">
+                <p:menuitem value="#{msg.submenu_set_range}" actionListener="#{menuController.selectRange}"
+                            icon="fa fa-expand" ajax="false"/>
+                <p:separator/>
+                <p:menuitem value="#{msg.submenu_set_relations}" actionListener="#{menuController.setRelations}"
+                            icon="fa fa-group" ajax="false"/>
+            </p:submenu>
+            <p:submenu label="#{msg.menu_report}">
+                <p:menuitem value="#{msg.submenu_generate}" actionListener="#{menuController.generate}"
+                            icon="fa fa-cubes" ajax="false"/>
+                <p:separator/>
+                <p:menuitem value="#{msg.submenu_export}" actionListener="#{menuController.export}"
+                            icon="fa fa-download" ajax="false"/>
+            </p:submenu>
+        </p:menu>
+    </h:form>
+</ui:composition>

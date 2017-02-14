@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xml:lang="en" lang="en">
+    <h:head>
+        <title>Pivot Table</title>
+        <script type="application/javascript" src="./js/actions.js"></script>
+        <link href="./css/styles.css" rel="stylesheet" type="text/css"/>
+        <link rel="icon" type="image/png" href="./images/concordia.png" />
+    </h:head>
+    <h:body>
+        <p:layout fullPage="true">
+
+            <p:layoutUnit id="topPanel" position="north" size="100" resizable="true" closable="false" collapsible="false">
+                <ui:insert name="top"><h1>_</h1></ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit id="bottomPanel" position="south" size="100" resizable="true" closable="true" collapsible="true">
+                <ui:insert name="south"><h1>_</h1></ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <ui:insert name="main"><h1>_</h1></ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" size="250" header="Options" resizable="true" closable="false" collapsible="true">
+                <ui:insert name="left"><h1>_</h1></ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="east" size="300" header="Criteria" resizable="true" closable="true" collapsible="true" effect="drop">
+                <ui:insert name="right"><h1>_</h1></ui:insert>
+            </p:layoutUnit>
+
+        </p:layout>
+    </h:body>
+</html>

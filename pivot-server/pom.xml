@@ -8,11 +8,29 @@
     <parent>
         <artifactId>pivot</artifactId>
         <groupId>org.concordia</groupId>
-        <version>1.0</version>
+        <version>${project.build.version}</version>
     </parent>
 
     <artifactId>pivot-server</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+
+        <!--Spring Dependencies-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${project.spring.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.193</version>
+        </dependency>
+
+    </dependencies>
 
 
 </project>

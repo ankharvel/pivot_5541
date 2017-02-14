@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.concordia</groupId>
         <artifactId>pivot</artifactId>
-        <version>1.0</version>
+        <version>${project.build.version}</version>
     </parent>
 
     <artifactId>pivot-client</artifactId>
@@ -31,6 +31,12 @@
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.concordia</groupId>
+            <artifactId>pivot-server</artifactId>
+            <version>${project.build.version}</version>
         </dependency>
 
     </dependencies>

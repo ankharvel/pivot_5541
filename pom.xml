@@ -7,7 +7,7 @@
 
     <groupId>org.concordia</groupId>
     <artifactId>pivot</artifactId>
-    <version>1.0</version>
+    <version>${project.build.version}</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -18,6 +18,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.java.compiler>1.8</project.java.compiler>
+        <project.spring.version>4.3.5.RELEASE</project.spring.version>
+        <project.build.version>1.0</project.build.version>
     </properties>
 
     <dependencies>
@@ -25,7 +27,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>4.3.5.RELEASE</version>
+            <version>${project.spring.version}</version>
         </dependency>
 
     </dependencies>

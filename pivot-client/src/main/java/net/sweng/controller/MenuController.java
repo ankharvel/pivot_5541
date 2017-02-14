@@ -11,7 +11,7 @@ import javax.faces.event.ActionEvent;
  */
 @ManagedBean
 @SessionScoped
-public class MenuBean {
+public class MenuController {
 
     private boolean uploadFileEnable;
     private boolean uploadDBEnable;
@@ -27,19 +27,19 @@ public class MenuBean {
     }
 
     public void selectRange() {
-        addMessage("Unable to execute action", "Method not available", FacesMessage.SEVERITY_ERROR);
+        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_ERROR);
     }
 
     public void setRelations() {
-        addMessage("Unable to execute action", "Method not available", FacesMessage.SEVERITY_ERROR);
+        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_ERROR);
     }
 
     public void generate() {
-        addMessage("Unable to execute action", "Method not available", FacesMessage.SEVERITY_ERROR);
+        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_ERROR);
     }
 
     public void export() {
-        addMessage("Unable to execute action", "Method not available", FacesMessage.SEVERITY_ERROR);
+        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_ERROR);
     }
 
     public boolean isUploadFileEnable() {

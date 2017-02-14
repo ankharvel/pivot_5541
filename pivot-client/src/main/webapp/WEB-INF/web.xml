@@ -14,6 +14,9 @@
             org.springframework.web.context.request.RequestContextListener
         </listener-class>
     </listener>
+    <listener>
+        <listener-class>net.sweng.config.HttpSessionHandler</listener-class>
+    </listener>
 
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -27,6 +30,11 @@
     <context-param>
         <param-name>primefaces.FONT_AWESOME</param-name>
         <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
     </context-param>
 
     <welcome-file-list>
