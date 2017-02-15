@@ -26,8 +26,8 @@ public class MenuController {
         this.uploadDBEnable = true;
     }
 
-    public void selectRange() {
-        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_ERROR);
+    public void setDataType(ActionEvent event) {
+        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_FATAL);
     }
 
     public void setRelations() {

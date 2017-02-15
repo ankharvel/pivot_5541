@@ -7,6 +7,6 @@ import net.sweng.domain.TableData;
  */
 public interface PivotDao {
 
-    TableData getRecordsFromCsv(String sourcePath, int sessionPrefix);
+    TableData getRecordsFromCsv(String sourcePath);
 
 }

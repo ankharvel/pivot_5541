@@ -14,8 +14,8 @@ public class PivotController {
     @Autowired
     private PivotDao pivotDao;
 
-    public TableData generate(String sourcePath, int sessionPrefix) {
-        return pivotDao.getRecordsFromCsv(sourcePath, sessionPrefix);
+    public TableData generate(String sourcePath) {
+        return pivotDao.getRecordsFromCsv(sourcePath);
     }
 
 }

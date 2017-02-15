@@ -6,9 +6,9 @@
     <h:panelGrid rendered="#{menuController.uploadFileEnable}">
         <ui:include src="load_file.xhtml"/>
     </h:panelGrid>
-    <h:panelGrid rendered="#{menuController.uploadDBEnable}">
-        <p:spacer height="30"/>
-        <h:outputText value="#{msg.under_construction}"/>
-    </h:panelGrid>
+    <h:panelGroup rendered="#{menuController.uploadDBEnable}">
+        <p:spacer height="50"/>
+        <h:graphicImage url="./images/underconstruction.png"/>
+    </h:panelGroup>
 
 </ui:composition>

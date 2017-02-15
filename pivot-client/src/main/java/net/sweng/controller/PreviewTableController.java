@@ -8,7 +8,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import java.io.Serializable;
 
-import static net.sweng.config.HttpSessionHandler.getMappedSessionId;
 import static net.sweng.config.ResourceHandler.getSessionResourcePath;
 
 @ManagedBean
@@ -36,7 +35,7 @@ public class PreviewTableController extends AbstractTableController implements S
     public void fillRecords(ActionEvent event) {
         String fileName = (String) uploadedFilesTableController.getSelectedFile().get(columnName);
         String s = getSessionResourcePath(fileName);
-        TableData td = pivotController.generate(s, getMappedSessionId());
+        TableData td = pivotController.generate(s);
         setColumnKeys(td.getColumnNames());
         createDynamicColumns();
         setRegisters(td.getData());

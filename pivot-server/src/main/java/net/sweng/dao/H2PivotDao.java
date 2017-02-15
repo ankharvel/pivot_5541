@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static net.sweng.config.DBConfig.getSessionIdPrefix;
+
 /**
  * Date on 2/13/17.
  */
@@ -48,14 +50,13 @@ public class H2PivotDao implements PivotDao {
         jdbcTemplate.update(CLEAN_UP);
     }
 
-    public TableData getRecordsFromCsv(String sourcePath, int sessionPrefix) {
-        String tableName = getTableName(sessionPrefix, sourcePath);
+    public TableData getRecordsFromCsv(String sourcePath) {
+        String tableName = getTableName(getSessionIdPrefix(), sourcePath);
         jdbcTemplate.update(MessageFormat.format(DROP_IF_EXIST, tableName));
         jdbcTemplate.update(MessageFormat.format(CREATE, tableName) +
                 MessageFormat.format(SELECT_FROM_CSV, sourcePath));
         List<String> columns = jdbcTemplate.queryForList(MessageFormat.format(SELECT_COLUMN_NAMES, tableName), String.class);
         String[] columnNames = columns.toArray(new String[columns.size()]);
-
 
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 MessageFormat.format(SELECT_FROM_CSV, sourcePath));
