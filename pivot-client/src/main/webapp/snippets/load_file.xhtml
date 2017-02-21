@@ -2,36 +2,39 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:form>
-        <p:remoteCommand name="refresh" actionListener="#{uploadedFilesTableController.fillRecords}" onsuccess="reloadUploadFile();"/>
+    <h:form id="loadFileForm">
+        <p:remoteCommand name="refresh" actionListener="#{uploadedTableController.fillRecords}" onsuccess="reloadUploadFile();"/>
         <p:spacer height="20"/>
-        <p:fileUpload fileUploadListener="#{fileUploadController.fileUploadListener}" oncomplete="if(this.files.length == 0) refresh();"
-                      mode="advanced" dragDropSupport="false"
+        <p:fileUpload fileUploadListener="#{uploadedTableController.fileUploadListener}"
+                      oncomplete="if(this.files.length == 0) refresh();" mode="advanced" dragDropSupport="false"
                       update="uploadMsg" sizeLimit="100000000" allowTypes="/(\.)(txt|TXT|csv|CSV)$/" />
         <p:growl id="uploadMsg" showDetail="true" />
 
-        <h:panelGrid rendered="#{fileUploadController.filesAvailable}">
-            <p:dataTable id="singleUpdF" var="message" value="#{uploadedFilesTableController.registers}" style="width: 250px"
-                         selectionMode="single" selection="#{uploadedFilesTableController.selectedFile}" rowKey="#{message[msg.uploaded_files]}">
-                <p:columns value="#{uploadedFilesTableController.columns}" var="column" columnIndexVar="colIndex">
+        <h:panelGrid rendered="#{not empty uploadedTableController.uploadedFiles}">
+            <p:dataTable id="singleUpdF" var="message" value="#{uploadedTableController.registers}" style="width: 250px"
+                         selectionMode="single" selection="#{uploadedTableController.selectedFile}" rowKey="#{message[msg.uploaded_files]}">
+                <p:ajax event="rowSelect" update="loadFileViewBtn"/>
+                <p:ajax event="rowUnselect" update="loadFileViewBtn"/>
+                <p:columns value="#{uploadedTableController.columns}" var="column" columnIndexVar="colIndex">
                     <f:facet name="header">
                         <h:outputText value="#{column.header}"/>
                     </f:facet>
                     <h:outputText value="#{message[column.property]}"/>
                 </p:columns>
                 <f:facet name="footer">
-                    <p:commandButton process="singleUpdF" icon="ui-icon-search" value="#{msg.view}"
-                                     actionListener="#{previewTableController.fillRecords}" ajax="false"/>
+                    <p:commandButton id="loadFileViewBtn" process="singleUpdF" icon="ui-icon-search" value="#{msg.view}"
+                                     actionListener="#{previewTableController.fillRecords}" ajax="false"
+                                     disabled="#{uploadedTableController.selectedFile eq null}"/>
                 </f:facet>
             </p:dataTable>
         </h:panelGrid>
 
         <p:spacer height="10"/>
     </h:form>
-    <h:panelGrid rendered="#{uploadedFilesTableController.selectedFile ne null}" style="height: 10%">
+    <h:panelGrid rendered="#{previewTableController.activeTable}">
         <p:dataTable var="message" value="#{previewTableController.registers}">
             <f:facet name="header">
-                <h:outputText value="#{uploadedFilesTableController.selectedFile[msg.uploaded_files]}"/>
+                <h:outputText value="#{uploadedTableController.selectedFile[msg.uploaded_files]}"/>
             </f:facet>
             <p:columns value="#{previewTableController.columns}" var="column" columnIndexVar="colIndex">
                 <f:facet name="header">

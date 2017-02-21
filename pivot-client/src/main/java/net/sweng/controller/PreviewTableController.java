@@ -14,13 +14,15 @@ import static net.sweng.config.ResourceHandler.getSessionResourcePath;
 @ViewScoped
 public class PreviewTableController extends AbstractTableController implements Serializable {
 
-    @ManagedProperty(value = "#{uploadedFilesTableController}")
-    private UploadedFilesTableController uploadedFilesTableController;
+    @ManagedProperty(value = "#{uploadedTableController}")
+    private UploadedTableController uploadedFilesTableController;
 
     @ManagedProperty(value = "#{msg.uploaded_files}")
     private String columnName;
 
-    public void setUploadedFilesTableController(UploadedFilesTableController uploadedFilesTableController) {
+    private boolean activeTable;
+
+    public void setUploadedFilesTableController(UploadedTableController uploadedFilesTableController) {
         this.uploadedFilesTableController = uploadedFilesTableController;
     }
 
@@ -39,6 +41,11 @@ public class PreviewTableController extends AbstractTableController implements S
         setColumnKeys(td.getColumnNames());
         createDynamicColumns();
         setRegisters(td.getData());
+        activeTable = true;
+    }
+
+    public boolean isActiveTable() {
+        return activeTable;
     }
 
 }

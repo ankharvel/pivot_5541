@@ -4,22 +4,41 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
 import java.util.logging.Logger;
 
 @ManagedBean
-@SessionScoped
-public class FileUploadController {
+@ViewScoped
+public class UploadedTableController extends AbstractTableController implements Serializable {
 
-    private static final Logger logger = Logger.getLogger(FileUploadController.class.getName());
+    private static final Logger logger = Logger.getGlobal();
+
+    @ManagedProperty(value = "#{msg.uploaded_files}")
+    private String columnName;
+
+    private Map<String, Object> selectedFile;
 
     private Set<String> uploadedFiles = new HashSet<>();
-    private boolean filesAvailable;
+
+    @Override
+    public void initialize() {
+        setColumnKeys(new String[]{columnName});
+        createDynamicColumns();
+    }
+
+    @Override
+    public void fillRecords(ActionEvent event) {
+        List<Map<String, Object>> data = new LinkedList<>();
+        uploadedFiles.stream().forEach(c -> data.add(Collections.singletonMap(columnName, c)));
+        setRegisters(data);
+    }
 
     /**
      * This method runs when the file is uploaded and store a copy in a tmp folder
@@ -37,18 +56,28 @@ public class FileUploadController {
             }
             file.write(destDir.getPath() + "/" + file.getFileName());
             uploadedFiles.add(file.getFileName());
-            filesAvailable = !uploadedFiles.isEmpty();
             logger.info(String.format("Uploaded file: %s, Size : %s", file.getFileName(), file.getSize()));
         } catch (Exception ex) {
             logger.severe(ex.getMessage());
         }
     }
 
+    //-----------------------  GETTERS & SETTERS ---------------------------------
+
+    public Map<String, Object> getSelectedFile() {
+        return selectedFile;
+    }
+
+    public void setSelectedFile(Map<String, Object> selectedFile) {
+        this.selectedFile = selectedFile;
+    }
+
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
+
     public Set<String> getUploadedFiles() {
         return uploadedFiles;
     }
 
-    public boolean isFilesAvailable() {
-        return filesAvailable;
-    }
 }
