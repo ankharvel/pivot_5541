@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+        >
+    <p:dataTable id="uploadFileTb" var="message" value="#{uploadedTableController.registers}" style="width: 250px"
+                 selectionMode="single" selection="#{uploadedTableController.selectedFile}" rowKey="#{message[msg.header_uploaded_files]}">
+        <p:ajax event="rowSelect" update="loadFileViewBtn" disabled="#{not menuController.uploadFileEnable}"/>
+        <p:ajax event="rowUnselect" update="loadFileViewBtn" disabled="#{not menuController.uploadFileEnable}"/>
+        <p:ajax event="rowSelect" update="confTypeBtn" disabled="#{not menuController.dataTypeEnable}"/>
+        <p:ajax event="rowUnselect" update="confTypeBtn" disabled="#{not menuController.dataTypeEnable}"/>
+        <p:columns value="#{uploadedTableController.columns}" var="column" columnIndexVar="colIndex">
+            <f:facet name="header">
+                <h:outputText value="#{column.header}"/>
+            </f:facet>
+            <h:outputText value="#{message[column.property]}"/>
+        </p:columns>
+        <f:facet name="footer">
+            <p:commandButton id="loadFileViewBtn" process="uploadFileTb" icon="ui-icon-search" value="#{msg.btn_view}"
+                             actionListener="#{previewTableController.fillRecords}" ajax="false"
+                             disabled="#{uploadedTableController.selectedFile eq null}"
+                             rendered="#{menuController.uploadFileEnable}"/>
+            <p:commandButton id="confTypeBtn" process="uploadFileTb" icon="ui-icon-search" value="#{msg.btn_configure}"
+                             actionListener="#{columnTypeTableController.fillRecords}" ajax="false"
+                             disabled="#{uploadedTableController.selectedFile eq null}"
+                             rendered="#{menuController.dataTypeEnable}"/>
+        </f:facet>
+    </p:dataTable>
+
+</ui:composition>

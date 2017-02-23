@@ -1,7 +1,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+        >
     <h:form id="loadFileForm">
         <p:remoteCommand name="refresh" actionListener="#{uploadedTableController.fillRecords}" onsuccess="reloadUploadFile();"/>
         <p:spacer height="20"/>
@@ -10,31 +12,17 @@
                       update="uploadMsg" sizeLimit="100000000" allowTypes="/(\.)(txt|TXT|csv|CSV)$/" />
         <p:growl id="uploadMsg" showDetail="true" />
 
-        <h:panelGrid rendered="#{not empty uploadedTableController.uploadedFiles}">
-            <p:dataTable id="singleUpdF" var="message" value="#{uploadedTableController.registers}" style="width: 250px"
-                         selectionMode="single" selection="#{uploadedTableController.selectedFile}" rowKey="#{message[msg.uploaded_files]}">
-                <p:ajax event="rowSelect" update="loadFileViewBtn"/>
-                <p:ajax event="rowUnselect" update="loadFileViewBtn"/>
-                <p:columns value="#{uploadedTableController.columns}" var="column" columnIndexVar="colIndex">
-                    <f:facet name="header">
-                        <h:outputText value="#{column.header}"/>
-                    </f:facet>
-                    <h:outputText value="#{message[column.property]}"/>
-                </p:columns>
-                <f:facet name="footer">
-                    <p:commandButton id="loadFileViewBtn" process="singleUpdF" icon="ui-icon-search" value="#{msg.view}"
-                                     actionListener="#{previewTableController.fillRecords}" ajax="false"
-                                     disabled="#{uploadedTableController.selectedFile eq null}"/>
-                </f:facet>
-            </p:dataTable>
+        <h:panelGrid columns="2" rendered="#{not empty uploadedTableController.uploadedFiles}">
+            <p:spacer width="50"/>
+            <ui:include src="components/uploaded_table.xhtml"/>
         </h:panelGrid>
 
         <p:spacer height="10"/>
     </h:form>
-    <h:panelGrid rendered="#{previewTableController.activeTable}">
+    <h:panelGrid rendered="#{previewTableController.activeTable ne null}">
         <p:dataTable var="message" value="#{previewTableController.registers}">
             <f:facet name="header">
-                <h:outputText value="#{uploadedTableController.selectedFile[msg.uploaded_files]}"/>
+                <h:outputText value="#{previewTableController.activeTable}"/>
             </f:facet>
             <p:columns value="#{previewTableController.columns}" var="column" columnIndexVar="colIndex">
                 <f:facet name="header">

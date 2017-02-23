@@ -35,6 +35,6 @@ public class DBConfig {
 
     public static Integer getSessionIdPrefix() {
         HttpServletRequest request = ((ServletRequestAttributes) currentRequestAttributes()).getRequest();
-        return (Integer) request.getSession(false).getAttribute("s_id");
+        return (Integer) request.getSession(false).getAttribute("session.id");
     }
 }

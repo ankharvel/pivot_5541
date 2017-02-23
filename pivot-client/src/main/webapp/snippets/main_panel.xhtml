@@ -3,12 +3,19 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
         >
-    <h:panelGrid rendered="#{menuController.uploadFileEnable}">
+
+    <h:panelGroup rendered="#{menuController.uploadFileEnable}">
         <ui:include src="load_file.xhtml"/>
-    </h:panelGrid>
+    </h:panelGroup>
+
     <h:panelGroup rendered="#{menuController.uploadDBEnable}">
         <p:spacer height="50"/>
         <h:graphicImage url="./images/underconstruction.png"/>
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{menuController.dataTypeEnable}">
+        <p:spacer width="50"/>
+        <ui:include src="set_data_type.xhtml"/>
     </h:panelGroup>
 
 </ui:composition>

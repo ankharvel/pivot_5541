@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Date on 2/14/17.
  */
-public abstract class AbstractTableController {
+public abstract class AbstractTableController extends AbstractView {
 
     private List<Map<String, Object>> registers = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public abstract class AbstractTableController {
     }
 
     public void setColumnKeys(String[] columnKeys) {
-        this.columnKeys = columnKeys;
+            this.columnKeys = columnKeys;
     }
 
     protected void createDynamicColumns() {

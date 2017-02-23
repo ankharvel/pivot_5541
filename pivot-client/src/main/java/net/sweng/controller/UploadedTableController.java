@@ -4,7 +4,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -14,14 +14,14 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static net.sweng.config.HttpSessionHandler.putSessionAttribute;
+import static net.sweng.config.SessionKeys.FILE_AVAILABLE;
+
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class UploadedTableController extends AbstractTableController implements Serializable {
 
     private static final Logger logger = Logger.getGlobal();
-
-    @ManagedProperty(value = "#{msg.uploaded_files}")
-    private String columnName;
 
     private Map<String, Object> selectedFile;
 
@@ -29,13 +29,14 @@ public class UploadedTableController extends AbstractTableController implements 
 
     @Override
     public void initialize() {
-        setColumnKeys(new String[]{columnName});
+        setColumnKeys(new String[]{bundle.getString("header_uploaded_files")});
         createDynamicColumns();
     }
 
     @Override
     public void fillRecords(ActionEvent event) {
         List<Map<String, Object>> data = new LinkedList<>();
+        String columnName = bundle.getString("header_uploaded_files");
         uploadedFiles.stream().forEach(c -> data.add(Collections.singletonMap(columnName, c)));
         setRegisters(data);
     }
@@ -56,6 +57,7 @@ public class UploadedTableController extends AbstractTableController implements 
             }
             file.write(destDir.getPath() + "/" + file.getFileName());
             uploadedFiles.add(file.getFileName());
+            putSessionAttribute(FILE_AVAILABLE, true);
             logger.info(String.format("Uploaded file: %s, Size : %s", file.getFileName(), file.getSize()));
         } catch (Exception ex) {
             logger.severe(ex.getMessage());
@@ -70,10 +72,6 @@ public class UploadedTableController extends AbstractTableController implements 
 
     public void setSelectedFile(Map<String, Object> selectedFile) {
         this.selectedFile = selectedFile;
-    }
-
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
     }
 
     public Set<String> getUploadedFiles() {

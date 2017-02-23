@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+        >
+    <h:panelGrid id="setTypeGrid" columns="4" rendered="#{not empty uploadedTableController.uploadedFiles}">
+        <p:spacer width="50"/>
+
+        <h:form>
+            <ui:include src="components/uploaded_table.xhtml"/>
+        </h:form>
+
+        <p:spacer width="100"/>
+
+        <h:panelGrid rendered="#{columnTypeTableController.activeTable ne null}" style="vertical-align: top">
+            <h:form>
+                <p:dataTable id="columnTypesTb" var="message" value="#{columnTypeTableController.registers}"
+                             editable="true" editMode="cell" widgetVar="cellcolType" style="width: 250px">
+                    <f:facet name="header">
+                        <h:outputText value="#{columnTypeTableController.activeTable}"/>
+                    </f:facet>
+
+                    <p:ajax event="cellEdit" listener="#{columnTypeTableController.onCellEdit}" update=":leftMenu:messages" />
+
+                    <p:column headerText="#{msg.header_column}">
+                        <h:outputLabel style="float: left;text-align:start" value="#{message[msg.header_column]}" />
+                    </p:column>
+
+                    <p:column headerText="#{msg.header_type}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputLabel value="#{columnTypeTableController.getLabel(message[msg.header_type])}" style="float: left;text-align:start" />
+                                <i class="fa fa-pencil" style="float:right"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{message[msg.header_type]}" style="width:95%">
+                                    <f:selectItems value="#{columnTypeTableController.types}" var="type"
+                                                   itemLabel="#{columnTypeTableController.getLabel(type)}" itemValue="#{type}"/>
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                </p:dataTable>
+
+                <p:contextMenu for="columnTypesTb" widgetVar="cMenu">
+                    <p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('cellcolType').showCellEditor();return false;"/>
+                    <p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>
+                </p:contextMenu>
+
+            </h:form>
+
+        </h:panelGrid>
+    </h:panelGrid>
+</ui:composition>

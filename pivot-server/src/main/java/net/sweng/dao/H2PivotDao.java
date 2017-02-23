@@ -11,6 +11,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static net.sweng.config.DBConfig.getSessionIdPrefix;
@@ -61,6 +62,12 @@ public class H2PivotDao implements PivotDao {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 MessageFormat.format(SELECT_FROM_CSV, sourcePath));
         return new TableData(columnNames, data);
+    }
+
+    @Override
+    public String[] getHeadersFromCsv(String sourcePath) {
+        Set<String> columns = jdbcTemplate.queryForList(MessageFormat.format(SELECT_FROM_CSV + " LIMIT 1", sourcePath)).get(0).keySet();
+        return columns.toArray(new String[columns.size()]);
     }
 
     private String getTableName(int sessionPrefix, String sourcePath) {

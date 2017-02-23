@@ -14,8 +14,12 @@ public class PivotController {
     @Autowired
     private PivotDao pivotDao;
 
-    public TableData generate(String sourcePath) {
+    public TableData readCSV(String sourcePath) {
         return pivotDao.getRecordsFromCsv(sourcePath);
+    }
+
+    public String[] readCSVHeaders(String sourcePath) {
+        return pivotDao.getHeadersFromCsv(sourcePath);
     }
 
 }

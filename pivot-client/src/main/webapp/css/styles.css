@@ -105,8 +105,17 @@ body {
     height: 25%;
 }
 
+.pt-row-text-cell {
+    float: left;
+    text-align:start;
+}
+
 .ui-datatable tbody.ui-datatable-data {
     font-size: 0.9em;
+}
+
+#setTypeGrid td {
+    vertical-align: top;
 }
 
 .error {

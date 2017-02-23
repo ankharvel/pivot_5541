@@ -9,4 +9,6 @@ public interface PivotDao {
 
     TableData getRecordsFromCsv(String sourcePath);
 
+    String[] getHeadersFromCsv(String sourcePath);
+
 }
