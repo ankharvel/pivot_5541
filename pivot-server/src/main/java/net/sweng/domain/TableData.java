@@ -10,9 +10,9 @@ import java.util.Map;
 public class TableData implements Serializable {
 
     private String[] columnNames;
-    private List<Map<String, Object>> data;
+    private List<GenericRow> data;
 
-    public TableData(String[] columnNames, List<Map<String, Object>> data) {
+    public TableData(String[] columnNames, List<GenericRow> data) {
         this.columnNames = columnNames;
         this.data = data;
     }
@@ -21,7 +21,7 @@ public class TableData implements Serializable {
         return columnNames;
     }
 
-    public List<Map<String, Object>> getData() {
+    public List<GenericRow> getData() {
         return data;
     }
 }

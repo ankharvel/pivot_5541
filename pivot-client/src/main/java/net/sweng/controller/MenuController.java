@@ -10,6 +10,7 @@ import javax.faces.event.ActionEvent;
 
 import static net.sweng.config.HttpSessionHandler.getSessionAttribute;
 import static net.sweng.config.SessionKeys.FILE_AVAILABLE;
+import static net.sweng.config.SessionKeys.SCHEMA_AVAILABLE;
 import static net.sweng.domain.OptionView.*;
 
 /**
@@ -22,33 +23,58 @@ public class MenuController extends AbstractView {
     private boolean uploadFileEnable;
     private boolean uploadDBEnable;
     private boolean dataTypeEnable;
+    private boolean relationEnable;
+    private boolean generateEnable;
+    private boolean exportEnable;
+
+    private String iconClass;
+    private String menuTitle;
 
     public void uploadFromFile(ActionEvent event) {
+        menuTitle = bundle.getString("subtitle_upload_files");
+        iconClass = "fa fa-file-text";
         enableView(UPLOAD_FILE);
     }
 
     public void uploadFromDatabase(ActionEvent event) {
+        menuTitle = bundle.getString("subtitle_connect_db");
+        iconClass = "fa fa-database";
         enableView(CONNECT_DATABASE);
+        addMessage(bundle.getString("info_not_available"), bundle.getString("info_under_construction"), FacesMessage.SEVERITY_ERROR);
     }
 
     public void setDataType(ActionEvent event) {
-        if(!getSessionAttribute(FILE_AVAILABLE, Boolean.class)) {
-            addMessage(bundle.getString("err_unable_execute"), bundle.getString("adv_upload_first"), FacesMessage.SEVERITY_FATAL);
-        } else {
+        if(getSessionAttribute(FILE_AVAILABLE, Boolean.class)) {
+            menuTitle = bundle.getString("subtitle_data_type");
+            iconClass = "fa fa-expand";
             enableView(DATA_TYPE);
+        } else {
+            addMessage(bundle.getString("err_unable_execute"), bundle.getString("adv_upload_first"), FacesMessage.SEVERITY_FATAL);
         }
     }
 
-    public void setRelations() {
-        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_ERROR);
+    public void setRelations(ActionEvent event) {
+        menuTitle = bundle.getString("subtitle_relations");
+        iconClass = "fa fa-group";
+        enableView(RELATIONS);
+        addMessage(bundle.getString("info_not_available"), bundle.getString("info_under_construction"), FacesMessage.SEVERITY_ERROR);
     }
 
-    public void generate() {
-        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_ERROR);
+    public void generate(ActionEvent event) {
+        if(getSessionAttribute(SCHEMA_AVAILABLE, Boolean.class)) {
+            menuTitle = bundle.getString("subtitle_generate");
+            iconClass = "fa fa-cubes";
+            enableView(GENERATE);
+        } else {
+            addMessage(bundle.getString("err_unable_execute"), bundle.getString("adv_set_schema"), FacesMessage.SEVERITY_FATAL);
+        }
     }
 
-    public void export() {
-        addMessage("Unable to execute action", "Feature not available", FacesMessage.SEVERITY_ERROR);
+    public void export(ActionEvent event) {
+        menuTitle = bundle.getString("subtitle_export");
+        iconClass = "fa fa-download";
+        enableView(EXPORT);
+        addMessage(bundle.getString("info_not_available"), bundle.getString("info_under_construction"), FacesMessage.SEVERITY_ERROR);
     }
 
     public boolean isUploadFileEnable() {
@@ -63,6 +89,26 @@ public class MenuController extends AbstractView {
         return dataTypeEnable;
     }
 
+    public boolean isRelationEnable() {
+        return relationEnable;
+    }
+
+    public boolean isGenerateEnable() {
+        return generateEnable;
+    }
+
+    public boolean isExportEnable() {
+        return exportEnable;
+    }
+
+    public String getIconClass() {
+        return iconClass;
+    }
+
+    public String getMenuTitle() {
+        return menuTitle;
+    }
+
     private void addMessage(String summary, String detail, FacesMessage.Severity severity) {
         FacesMessage message = new FacesMessage(severity, summary, detail);
         FacesContext.getCurrentInstance().addMessage(null, message);
@@ -72,6 +118,9 @@ public class MenuController extends AbstractView {
         this.uploadFileEnable = false;
         this.uploadDBEnable = false;
         this.dataTypeEnable = false;
+        this.relationEnable = false;
+        this.generateEnable = false;
+        this.exportEnable = false;
         switch (view) {
             case UPLOAD_FILE:
                 this.uploadFileEnable = true;
@@ -83,13 +132,13 @@ public class MenuController extends AbstractView {
                 this.dataTypeEnable = true;
                 break;
             case RELATIONS:
-                this.dataTypeEnable = true;
+                this.relationEnable = true;
                 break;
             case GENERATE:
-                this.dataTypeEnable = true;
+                this.generateEnable = true;
                 break;
             case EXPORT:
-                this.dataTypeEnable = true;
+                this.exportEnable = true;
                 break;
         }
     }

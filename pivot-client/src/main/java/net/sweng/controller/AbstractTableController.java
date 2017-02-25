@@ -1,6 +1,7 @@
 package net.sweng.controller;
 
 import net.sweng.domain.ColumnModel;
+import net.sweng.domain.GenericRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.jsf.FacesContextUtils;
 
@@ -9,14 +10,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Date on 2/14/17.
  */
 public abstract class AbstractTableController extends AbstractView {
 
-    private List<Map<String, Object>> registers = new ArrayList<>();
+    private List<GenericRow> registers = new ArrayList<>();
 
     private List<ColumnModel> columns = new ArrayList<>();
     private String[] columnKeys = new String[0];
@@ -40,11 +40,11 @@ public abstract class AbstractTableController extends AbstractView {
         return columns;
     }
 
-    public List<Map<String, Object>> getRegisters() {
+    public List<GenericRow> getRegisters() {
         return registers;
     }
 
-    public void setRegisters(List<Map<String, Object>> registers) {
+    public void setRegisters(List<GenericRow> registers) {
         this.registers = registers;
     }
 

@@ -4,18 +4,35 @@
                 xmlns:p="http://primefaces.org/ui"
         >
 
+    <div class="ui-g" style="background: linear-gradient(to right, #7297BA , ghostwhite);
+        height: 40px;padding-left: 10px;padding-top: 10px;color: white;font-weight: bolder;">
+        <div class="ui-g-12 ui-g-nopad">
+            <h:panelGroup>
+                <i class="#{menuController.iconClass}" style="font-size: 1.2em; float: left"/>
+                <p:spacer width="20" style="float: left"/>
+                <h:outputLabel value="#{menuController.menuTitle}" style="font-size: 1.1em;float: left;"/>
+            </h:panelGroup>
+        </div>
+    </div>
+
     <h:panelGroup rendered="#{menuController.uploadFileEnable}">
         <ui:include src="load_file.xhtml"/>
     </h:panelGroup>
 
-    <h:panelGroup rendered="#{menuController.uploadDBEnable}">
+    <h:panelGroup rendered="#{menuController.uploadDBEnable or menuController.relationEnable
+        or menuController.exportEnable}">
         <p:spacer height="50"/>
         <h:graphicImage url="./images/underconstruction.png"/>
     </h:panelGroup>
 
     <h:panelGroup rendered="#{menuController.dataTypeEnable}">
-        <p:spacer width="50"/>
+        <p:spacer width="20"/>
         <ui:include src="set_data_type.xhtml"/>
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{menuController.generateEnable}">
+        <p:spacer width="20"/>
+        <ui:include src="generate.xhtml"/>
     </h:panelGroup>
 
 </ui:composition>

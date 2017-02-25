@@ -1,6 +1,7 @@
 package net.sweng.controller;
 
 import net.sweng.domain.DataType;
+import net.sweng.domain.GenericRow;
 import net.sweng.domain.TableCatalogue;
 import net.sweng.domain.TableSchema;
 import org.primefaces.event.CellEditEvent;
@@ -13,9 +14,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import static net.sweng.config.HttpSessionHandler.putSessionAttribute;
 import static net.sweng.config.ResourceHandler.getSessionResourcePath;
+import static net.sweng.config.SessionKeys.SCHEMA_AVAILABLE;
+import static net.sweng.config.SessionKeys.TABLE_SCHEMA_CATALOGUE;
 
 @ManagedBean
 @SessionScoped
@@ -30,6 +36,8 @@ public class ColumnTypeTableController extends AbstractTableController implement
 
     public void initialize() {
         catalogue = new TableCatalogue(this::obtainData);
+        putSessionAttribute(TABLE_SCHEMA_CATALOGUE, catalogue);
+        putSessionAttribute(SCHEMA_AVAILABLE, true);
         setColumnKeys(new String[]{bundle.getString("header_column"), bundle.getString("header_type")});
         createDynamicColumns();
     }
@@ -40,13 +48,13 @@ public class ColumnTypeTableController extends AbstractTableController implement
         activeTable = fileName;
     }
 
-    private List<Map<String, Object>> obtainData(String fileName) {
+    private List<GenericRow> obtainData(String fileName) {
         String s = getSessionResourcePath(fileName);
         String[] headers = pivotController.readCSVHeaders(s);
         TableSchema tableSchema = new TableSchema();
-        List<Map<String, Object>> data = new ArrayList<>();
+        List<GenericRow> data = new ArrayList<>();
         for(String h: headers) {
-            Map<String, Object> record = new HashMap<>();
+            GenericRow record = new GenericRow();
             record.put(bundle.getString("header_column"), h);
             record.put(bundle.getString("header_type"), tableSchema.getColumnType(h));
             data.add(record);

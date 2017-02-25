@@ -6,8 +6,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static net.sweng.config.SessionKeys.ACTIVE_SESSION_PREFIX;
-import static net.sweng.config.SessionKeys.FILE_AVAILABLE;
+import static net.sweng.config.SessionKeys.*;
 
 /**
  * Date on 2/14/17.
@@ -20,6 +19,7 @@ public class HttpSessionHandler implements HttpSessionListener {
     public void sessionCreated(HttpSessionEvent ev) {
         ev.getSession().setAttribute(ACTIVE_SESSION_PREFIX, seq.incrementAndGet());
         ev.getSession().setAttribute(FILE_AVAILABLE, false);
+        ev.getSession().setAttribute(SCHEMA_AVAILABLE, false);
     }
 
     @Override
@@ -37,12 +37,6 @@ public class HttpSessionHandler implements HttpSessionListener {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
         return  clazz.cast(session.getAttribute(key));
-    }
-
-    public static String getSessionAttribute(String key) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
-        return  session.getAttribute(key) == null ? "" : session.getAttribute(key).toString();
     }
 
 }

@@ -9,8 +9,8 @@ public interface SessionKeys {
 
     String FILE_AVAILABLE = "file.available";
 
-    String FILE_PREVIEW = "file.preview";
+    String SCHEMA_AVAILABLE = "schema.available";
 
-    String FILE_ACTIVE_SCHEMA = "file.active.schema";
+    String TABLE_SCHEMA_CATALOGUE = "schema.catalogue";
 
 }

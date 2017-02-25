@@ -1,5 +1,6 @@
 package net.sweng.controller;
 
+import net.sweng.domain.GenericRow;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -23,7 +24,7 @@ public class UploadedTableController extends AbstractTableController implements 
 
     private static final Logger logger = Logger.getGlobal();
 
-    private Map<String, Object> selectedFile;
+    private GenericRow selectedFile;
 
     private Set<String> uploadedFiles = new HashSet<>();
 
@@ -35,9 +36,9 @@ public class UploadedTableController extends AbstractTableController implements 
 
     @Override
     public void fillRecords(ActionEvent event) {
-        List<Map<String, Object>> data = new LinkedList<>();
+        List<GenericRow> data = new LinkedList<>();
         String columnName = bundle.getString("header_uploaded_files");
-        uploadedFiles.stream().forEach(c -> data.add(Collections.singletonMap(columnName, c)));
+        uploadedFiles.stream().forEach(c -> data.add(GenericRow.createSingleton(columnName, c)));
         setRegisters(data);
     }
 
@@ -70,7 +71,7 @@ public class UploadedTableController extends AbstractTableController implements 
         return selectedFile;
     }
 
-    public void setSelectedFile(Map<String, Object> selectedFile) {
+    public void setSelectedFile(GenericRow selectedFile) {
         this.selectedFile = selectedFile;
     }
 

@@ -5,7 +5,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
         >
     <h:panelGrid id="setTypeGrid" columns="4" rendered="#{not empty uploadedTableController.uploadedFiles}">
-        <p:spacer width="50"/>
+        <p:spacer width="10"/>
 
         <h:form>
             <ui:include src="components/uploaded_table.xhtml"/>
@@ -31,7 +31,7 @@
                         <p:cellEditor>
                             <f:facet name="output">
                                 <h:outputLabel value="#{columnTypeTableController.getLabel(message[msg.header_type])}" style="float: left;text-align:start" />
-                                <i class="fa fa-pencil" style="float:right"/>
+                                <i class="fa fa-pencil" style="float:right;color:#F2BC00"/>
                             </f:facet>
                             <f:facet name="input">
                                 <h:selectOneMenu value="#{message[msg.header_type]}" style="width:95%">

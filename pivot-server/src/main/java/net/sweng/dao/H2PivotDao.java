@@ -1,5 +1,6 @@
 package net.sweng.dao;
 
+import net.sweng.domain.GenericRow;
 import net.sweng.domain.TableData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,8 +60,8 @@ public class H2PivotDao implements PivotDao {
         List<String> columns = jdbcTemplate.queryForList(MessageFormat.format(SELECT_COLUMN_NAMES, tableName), String.class);
         String[] columnNames = columns.toArray(new String[columns.size()]);
 
-        List<Map<String, Object>> data = jdbcTemplate.queryForList(
-                MessageFormat.format(SELECT_FROM_CSV, sourcePath));
+        List<GenericRow> data = jdbcTemplate.query(
+                MessageFormat.format(SELECT_FROM_CSV, sourcePath), new GenericRowMapper(columns));
         return new TableData(columnNames, data);
     }
 

@@ -12,5 +12,4 @@ public abstract class AbstractView {
     public AbstractView() {
         this.bundle = ResourceBundle.getBundle("messages");
     }
-
 }
