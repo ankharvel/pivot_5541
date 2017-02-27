@@ -46,7 +46,7 @@ public class H2QueryHelper implements QueryHelper {
     private void appendColumns(StringBuilder sql, List<ColumnDetail> rows) {
         if(!rows.isEmpty()) {
             for(ColumnDetail detail: rows) {
-                sql.append(" ").append(getCastedColumn(detail)).append(",");
+                sql.append(" ").append(detail.getColumnName()).append(",");
             }
             sql.delete(sql.lastIndexOf(","), sql.length());
         }
