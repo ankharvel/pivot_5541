@@ -75,7 +75,7 @@
             <p:spacer width="10"/>
             <p:fieldset id="dragFiltersArea" legend="#{msg.header_filter}">
                 <p:outputPanel id="dropFiltersArea">
-                    <h:outputText value="Comming soon!" rendered="#{empty parameterReportController.reportFilters}" style="color: darkgrey"/>
+                    <h:outputText value="#{msg.adv_comming}" rendered="#{empty parameterReportController.reportFilters}" style="color: darkgrey"/>
 
                     <p:dataGrid var="selectableColumn" value="#{parameterReportController.reportFilters}"
                                 columns="1" rendered="#{not empty parameterReportController.reportFilters}">
@@ -138,7 +138,7 @@
 
     <p:spacer height="20"/>
 
-    <h:panelGrid rendered="#{reportTableController.reportEnable}">
+    <h:panelGrid rendered="#{reportTableController.reportEnable}" style="width:#{reportTableController.dynamicWidth}">
         <h:form>
             <p:treeTable value="#{reportTableController.rootNode}" var="message">
                 <f:facet name="header">

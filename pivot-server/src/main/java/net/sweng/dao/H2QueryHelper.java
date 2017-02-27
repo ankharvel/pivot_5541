@@ -90,15 +90,17 @@ public class H2QueryHelper implements QueryHelper {
     }
 
     private void appendGroupBy(StringBuilder sql, List<ColumnDetail> rows, List<ColumnDetail> columns) {
-        if(!rows.isEmpty()) {
+        if(!rows.isEmpty() || !columns.isEmpty()) {
             sql.append(" GROUP BY ");
+        }
+        if(!rows.isEmpty()) {
             for(ColumnDetail detail: rows) {
                 sql.append(detail.getColumnName()).append(", ");
             }
             sql.delete(sql.lastIndexOf(","), sql.length());
         }
         if(!columns.isEmpty()) {
-            if(!sql.toString().trim().endsWith("SELECT")) {
+            if(!sql.toString().trim().endsWith("GROUP BY")) {
                 sql.append(", ");
             }
             for(ColumnDetail detail: columns) {

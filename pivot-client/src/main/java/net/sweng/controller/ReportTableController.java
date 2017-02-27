@@ -26,8 +26,7 @@ public class ReportTableController extends AbstractTableController {
 
     private static final String AGG_SUFFIX = "_agg";
     private static final String COL_SUFFIX = "_col";
-    private static final String LB_ROW = "Row Labels";
-    private static final String TOTAL = "Total";
+    private static final String LB_EMPTY = "-";
 
     @ManagedProperty(value = "#{parameterReportController}")
     private ParameterReportController parameterController;
@@ -35,10 +34,16 @@ public class ReportTableController extends AbstractTableController {
     private TreeNode rootNode;
     private boolean reportEnable;
     private String reportGenerated;
+    
+    private String lblRows;
+    private String lblTotal;
+    private String dynamicWidth;
 
     @Override
     public void initialize() {
         createDynamicColumns();
+        lblRows = bundle.getString("lbl_row");
+        lblTotal = bundle.getString("lbl_total");
     }
 
     @Override
@@ -46,8 +51,9 @@ public class ReportTableController extends AbstractTableController {
         try {
             ReportParameters parameters = parameterController.generateParameters();
             TableData data = pivotController.generateReportFromCSV(parameters);
-            List<String> headers = obtainHeaders(data);
+            List<String> headers = obtainHeaders(data, lblRows);
             setColumnKeys(headers.toArray(new String[headers.size()]));
+            updateDynamicWidth(headers.size());
             createDynamicColumns();
             setRootNode(obtainTree(data, headers));
             reportEnable = true;
@@ -65,45 +71,49 @@ public class ReportTableController extends AbstractTableController {
             GenericRow row = new GenericRow();
             row.put(headers.get(0), td.getData().get(0).get(td.getColumnNames()[0]));
             new DefaultTreeNode(row, root);
+            return root;
         }
 
-        if( !obtainRows(td.getColumnNames()).isEmpty()) {
-            TreeNodeContainer container = new TreeNodeContainer();
-            TreeNode parent;
-            String key;
-            String aggregation = obtainAggregation(td.getColumnNames());
-            GenericRow totalRow = new GenericRow();
-            headers.stream().forEach(r -> totalRow.put(r, 0D));
-            totalRow.put(LB_ROW, TOTAL);
-            List<String> rawColumns = obtainColumns(td.getColumnNames());
-            for(GenericRow inputRow: td.getData()) {
-                parent = root;
-                key = "";
-                for(String rowLbl: obtainRows(td.getColumnNames())) {
-                    key = key + "-" + inputRow.get(rowLbl);
-                    Pair<TreeNode, GenericRow> pairRow = container.getRow(key, parent);
-                    for(String header: headers) {
-                        addRowInformation(inputRow, pairRow.getValue(), header, rowLbl, aggregation, rawColumns);
-                        if(!rawColumns.isEmpty() && parent == root) {
-                            incrementTotalRow(inputRow, totalRow, header, aggregation, rawColumns);
-                        }
+        TreeNodeContainer container = new TreeNodeContainer();
+        TreeNode parent;
+        String key;
+        String aggregation = obtainAggregation(td.getColumnNames());
+        GenericRow totalRow = new GenericRow();
+        headers.stream().forEach(r -> totalRow.put(r, 0D));
+        totalRow.put(lblRows, lblTotal);
+        totalRow.put(LB_EMPTY, aggregation);
+        List<String> rawColumns = obtainColumns(td.getColumnNames());
+        for(GenericRow inputRow: td.getData()) {
+            parent = root;
+            key = "";
+            for(String rowLbl: obtainRows(td.getColumnNames())) {
+                key = key + "-" + inputRow.get(rowLbl);
+                Pair<TreeNode, GenericRow> pairRow = container.getRow(key, parent);
+                for(String header: headers) {
+                    addRowInformation(inputRow, pairRow.getValue(), header, rowLbl, aggregation, rawColumns, lblRows);
+                    if(!rawColumns.isEmpty() && parent == root) {
+                        incrementTotalRow(inputRow, totalRow, header, aggregation, rawColumns);
                     }
-                    parent = pairRow.getKey();
                 }
-                if(rawColumns.isEmpty()) {
-                    incrementTotalRow(inputRow, totalRow, aggregation);
+                parent = pairRow.getKey();
+            }
+            if(!rawColumns.isEmpty() && obtainRows(td.getColumnNames()).isEmpty()) {
+                for(String header: headers) {
+                    addRowInformation(inputRow, totalRow, header, null, aggregation, rawColumns, lblRows);
                 }
             }
-            new DefaultTreeNode(totalRow, root);
+            if(rawColumns.isEmpty()) {
+                incrementTotalRow(inputRow, totalRow, aggregation);
+            }
         }
-
+        new DefaultTreeNode(totalRow, root);
 
         return root;
     }
 
     private static void addRowInformation(GenericRow inputRow, GenericRow outRow, String header,
-                                          String rowLbl, String aggregation, List<String> rawColumns) {
-        if(header.equalsIgnoreCase(LB_ROW)) {
+                                          String rowLbl, String aggregation, List<String> rawColumns, String lblRows) {
+        if(header.equalsIgnoreCase(lblRows)) {
             outRow.put(header, inputRow.get(rowLbl));
         } else if(header.equalsIgnoreCase(aggregation)) {
             if (outRow.get(header) == null) {
@@ -144,20 +154,21 @@ public class ReportTableController extends AbstractTableController {
         }
     }
 
-    private static List<String> obtainHeaders(TableData data) {
+    private static List<String> obtainHeaders(TableData data, String lblRows) {
         String aggLbl = obtainAggregation(data.getColumnNames());
-        List<String> headers = new ArrayList<>();
-        if(obtainRows(data.getColumnNames()).isEmpty()) {
-            headers.add(aggLbl);
-        } else {
-            headers.add(LB_ROW);
-        }
-
         List<String> rawColumns = obtainColumns(data.getColumnNames());
-        if(!rawColumns.isEmpty()) {
-            rawColumns.stream().forEach(lbl -> headers.addAll(data.getPivotColumnValues(lbl)));
-        } else if(!headers.contains(aggLbl)) {
+        List<String> headers = new ArrayList<>();
+        if(obtainRows(data.getColumnNames()).isEmpty() && rawColumns.isEmpty()) {
             headers.add(aggLbl);
+        } else if(!obtainRows(data.getColumnNames()).isEmpty() && rawColumns.isEmpty()) {
+            headers.add(lblRows);
+            headers.add(aggLbl);
+        } else if(obtainRows(data.getColumnNames()).isEmpty() && !rawColumns.isEmpty()) {
+            headers.add(LB_EMPTY);
+            rawColumns.stream().forEach(lbl -> headers.addAll(data.getPivotColumnValues(lbl)));
+        } else {
+            headers.add(lblRows);
+            rawColumns.stream().forEach(lbl -> headers.addAll(data.getPivotColumnValues(lbl)));
         }
 
         return headers;
@@ -183,6 +194,14 @@ public class ReportTableController extends AbstractTableController {
                 .collect(Collectors.toList());
     }
 
+    private void updateDynamicWidth(int size) {
+        dynamicWidth = size <= 6 ? String.valueOf(size * 140) + "px" : "100%";
+    }
+
+    public String getDynamicWidth() {
+        return dynamicWidth;
+    }
+
     public TreeNode getRootNode() {
         return rootNode;
     }
@@ -203,24 +222,24 @@ public class ReportTableController extends AbstractTableController {
         this.parameterController = parameterController;
     }
 
-}
+    private class TreeNodeContainer {
 
-class TreeNodeContainer {
+        private Map<String, Pair<TreeNode, GenericRow>> treeNodeMap;
 
-    private Map<String, Pair<TreeNode, GenericRow>> treeNodeMap;
-
-    public TreeNodeContainer() {
-        this.treeNodeMap = new HashMap<>();
-    }
-
-    public Pair<TreeNode, GenericRow> getRow(String key, TreeNode parent) {
-        Pair<TreeNode, GenericRow> pair = treeNodeMap.get(key);
-        if(pair == null) {
-            GenericRow row = new GenericRow();
-            pair = Pair.of(new DefaultTreeNode(row, parent), row);
-            treeNodeMap.put(key, pair);
+        public TreeNodeContainer() {
+            this.treeNodeMap = new HashMap<>();
         }
-        return pair;
+
+        public Pair<TreeNode, GenericRow> getRow(String key, TreeNode parent) {
+            Pair<TreeNode, GenericRow> pair = treeNodeMap.get(key);
+            if(pair == null) {
+                GenericRow row = new GenericRow();
+                pair = Pair.of(new DefaultTreeNode(row, parent), row);
+                treeNodeMap.put(key, pair);
+            }
+            return pair;
+        }
+
     }
 
 }

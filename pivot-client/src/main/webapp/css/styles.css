@@ -119,6 +119,11 @@ body {
     font-size: 0.9em;
 }
 
+.ui-treetable tbody td {
+    border-color: inherit;
+    font-size: 0.9em;
+}
+
 #setTypeGrid td {
     vertical-align: top;
 }

@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,27 +45,32 @@ public class ParameterReportController extends AbstractView {
         this.reportColumns = new LinkedList<>();
         this.reportFilters = new LinkedList<>();
         this.reportField = new LinkedList<>();
+        this.columnSource.sort(new GenericRowComparator());
         enableDragMenu = true;
     }
 
     public void removeRow(GenericRow detail) {
         reportRows.remove(detail);
         columnSource.add(detail);
+        columnSource.sort(new GenericRowComparator());
     }
 
     public void removeColumn(GenericRow detail) {
         reportColumns.remove(detail);
         columnSource.add(detail);
+        columnSource.sort(new GenericRowComparator());
     }
 
     public void removeFilter(GenericRow detail) {
         reportFilters.remove(detail);
         columnSource.add(detail);
+        columnSource.sort(new GenericRowComparator());
     }
 
     public void removeField(GenericRow detail) {
         reportField.remove(detail);
         columnSource.add(detail);
+        columnSource.sort(new GenericRowComparator());
     }
 
     public ReportParameters generateParameters() {
@@ -133,6 +139,14 @@ public class ParameterReportController extends AbstractView {
             aggregationType = AggregationType.valueOf(value);
         }
 
+    }
+
+    private class GenericRowComparator implements Comparator<GenericRow> {
+        @Override
+        public int compare(GenericRow o1, GenericRow o2) {
+            return String.valueOf(o1.get(bundle.getString("header_column"))).compareTo(
+                    String.valueOf(o2.get(bundle.getString("header_column"))));
+        }
     }
 
 //---------------------------  GETTERS ---------------------------------------
