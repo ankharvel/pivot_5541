@@ -6,8 +6,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -42,12 +40,6 @@ public class ResourceHandler {
             logger.severe(ex.getMessage());
             ex.printStackTrace();
         }
-    }
-
-    public static String getSessionResourcePath(String filename) {
-        ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
-        String destPath = ctx.getRealPath("/WEB-INF/tmp/" + ctx.getSessionId(false));
-        return new File(destPath, filename).getAbsolutePath();
     }
 
     //------------------------------------ Helper Methods --------------------------------------

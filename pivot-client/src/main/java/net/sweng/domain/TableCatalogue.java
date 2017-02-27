@@ -29,15 +29,15 @@ public class TableCatalogue extends HashMap<String, List<GenericRow>> {
         }
     }
 
-    public List<ColumnDetail> getColumnDetails(Object key) {
-        List<GenericRow> rowList = get(key);
-        List<ColumnDetail> details = new ArrayList<>();
-        rowList.forEach(r -> details.add(
-                new ColumnDetail(
-                        r.get(bundle.getString("header_column")).toString(),
-                        DataType.valueOf(r.get(bundle.getString("header_type")).toString()))
-        ));
-        return details;
-    }
+//    public List<ColumnDetail> getColumnDetails(Object key) {
+//        List<GenericRow> rowList = get(key);
+//        List<ColumnDetail> details = new ArrayList<>();
+//        rowList.forEach(r -> details.add(
+//                new ColumnDetail(
+//                        r.get(bundle.getString("header_column")).toString(),
+//                        DataType.valueOf(r.get(bundle.getString("header_type")).toString()))
+//        ));
+//        return details;
+//    }
 
 }

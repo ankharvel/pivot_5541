@@ -37,4 +37,9 @@ public class DBConfig {
         HttpServletRequest request = ((ServletRequestAttributes) currentRequestAttributes()).getRequest();
         return (Integer) request.getSession(false).getAttribute("session.id");
     }
+
+    public static String getTempFolderPath() {
+        HttpServletRequest request = ((ServletRequestAttributes) currentRequestAttributes()).getRequest();
+        return (String) request.getSession(false).getAttribute("tmp.folder");
+    }
 }

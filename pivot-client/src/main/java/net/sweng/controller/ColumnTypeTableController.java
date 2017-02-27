@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static net.sweng.config.HttpSessionHandler.putSessionAttribute;
-import static net.sweng.config.ResourceHandler.getSessionResourcePath;
 import static net.sweng.config.SessionKeys.SCHEMA_AVAILABLE;
 import static net.sweng.config.SessionKeys.TABLE_SCHEMA_CATALOGUE;
 
@@ -49,8 +48,7 @@ public class ColumnTypeTableController extends AbstractTableController implement
     }
 
     private List<GenericRow> obtainData(String fileName) {
-        String s = getSessionResourcePath(fileName);
-        String[] headers = pivotController.readCSVHeaders(s);
+        String[] headers = pivotController.readCSVHeaders(fileName);
         TableSchema tableSchema = new TableSchema();
         List<GenericRow> data = new ArrayList<>();
         for(String h: headers) {

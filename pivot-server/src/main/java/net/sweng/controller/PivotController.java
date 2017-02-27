@@ -1,9 +1,16 @@
 package net.sweng.controller;
 
+import net.sweng.config.DBConfig;
 import net.sweng.dao.PivotDao;
+import net.sweng.domain.ReportParameters;
 import net.sweng.domain.TableData;
+import net.sweng.domain.exceptions.InvalidDataTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Date on 2/13/17.
@@ -14,12 +21,30 @@ public class PivotController {
     @Autowired
     private PivotDao pivotDao;
 
-    public TableData readCSV(String sourcePath) {
-        return pivotDao.getRecordsFromCsv(sourcePath);
+    public TableData readCSV(String fileName) {
+        try {
+            return pivotDao.getRecordsFromCsv(getSourcePath(fileName));
+        } catch (Exception ex) {
+            Logger.getGlobal().log(Level.SEVERE, ex.getMessage(), ex);
+            return null;
+        }
     }
 
-    public String[] readCSVHeaders(String sourcePath) {
-        return pivotDao.getHeadersFromCsv(sourcePath);
+    public String[] readCSVHeaders(String fileName) {
+        try {
+            return pivotDao.getHeadersFromCsv(getSourcePath(fileName));
+        } catch (Exception ex) {
+            Logger.getGlobal().log(Level.SEVERE, ex.getMessage(), ex);
+            return new String[0];
+        }
+    }
+
+    public TableData generateReportFromCSV(ReportParameters parameters) throws InvalidDataTypeException {
+        return pivotDao.getReportFromCsv(parameters, getSourcePath(parameters.getFileName()));
+    }
+
+    private String getSourcePath(String fileName) {
+        return new File(DBConfig.getTempFolderPath(), fileName).getPath();
     }
 
 }

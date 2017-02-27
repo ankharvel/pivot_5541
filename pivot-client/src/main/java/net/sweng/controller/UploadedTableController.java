@@ -6,17 +6,16 @@ import org.primefaces.model.UploadedFile;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static net.sweng.config.HttpSessionHandler.getSessionAttribute;
 import static net.sweng.config.HttpSessionHandler.putSessionAttribute;
 import static net.sweng.config.SessionKeys.FILE_AVAILABLE;
+import static net.sweng.config.SessionKeys.TEMP_FOLDER_PATH;
 
 @ManagedBean
 @SessionScoped
@@ -50,8 +49,7 @@ public class UploadedTableController extends AbstractTableController implements 
     public void fileUploadListener(FileUploadEvent e){
         UploadedFile file = e.getFile();
         try {
-            ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
-            String destPath = ctx.getRealPath("/WEB-INF/tmp/" + ctx.getSessionId(false));
+            String destPath = getSessionAttribute(TEMP_FOLDER_PATH, String.class);
             File destDir = new File(destPath);
             if(!destDir.exists()) {
                 destDir.mkdirs();

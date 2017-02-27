@@ -13,4 +13,6 @@ public interface SessionKeys {
 
     String TABLE_SCHEMA_CATALOGUE = "schema.catalogue";
 
+    String TEMP_FOLDER_PATH = "tmp.folder";
+
 }

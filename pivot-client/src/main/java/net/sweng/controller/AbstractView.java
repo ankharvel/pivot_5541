@@ -1,5 +1,7 @@
 package net.sweng.controller;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import java.util.ResourceBundle;
 
 /**
@@ -12,4 +14,14 @@ public abstract class AbstractView {
     public AbstractView() {
         this.bundle = ResourceBundle.getBundle("messages");
     }
+
+    protected void addErrorMessage(String message) {
+        FacesMessage msg = new FacesMessage(
+                FacesMessage.SEVERITY_ERROR,
+                bundle.getString("err_unable_execute"),
+                message
+        );
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
 }

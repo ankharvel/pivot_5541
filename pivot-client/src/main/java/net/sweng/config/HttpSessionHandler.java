@@ -1,6 +1,7 @@
 package net.sweng.config;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -17,9 +18,11 @@ public class HttpSessionHandler implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent ev) {
+        ServletContext ctx = ev.getSession().getServletContext();
         ev.getSession().setAttribute(ACTIVE_SESSION_PREFIX, seq.incrementAndGet());
         ev.getSession().setAttribute(FILE_AVAILABLE, false);
         ev.getSession().setAttribute(SCHEMA_AVAILABLE, false);
+        ev.getSession().setAttribute(TEMP_FOLDER_PATH, ctx.getRealPath("/WEB-INF/tmp/" + seq.get()));
     }
 
     @Override
