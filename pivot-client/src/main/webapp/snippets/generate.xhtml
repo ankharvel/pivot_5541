@@ -93,7 +93,7 @@
                 <p:outputPanel id="dropFieldsArea">
                     <div>
                         <h:panelGrid columns="1" cellpadding="0">
-                            <p:selectOneMenu id="aggregateComp" style="width: 112px" onchange="submit();"
+                            <p:selectOneMenu id="aggregateComp" style="width: 132px" onchange="submit();"
                                              valueChangeListener="#{parameterReportController.onAggregationChange}">
                                 <f:selectItem itemLabel=" " itemValue="" />
                                 <f:selectItem itemLabel="#{msg.lbl_count}" itemValue="COUNT" />
@@ -148,7 +148,7 @@
                     <f:facet name="header">
                         <h:outputText value="#{column.header}"/>
                     </f:facet>
-                    <h:outputText value="#{message[column.property]}"/>
+                    <h:outputText value="#{reportTableController.formatField(message[column.property])}"/>
                 </p:columns>
             </p:treeTable>
         </h:form>

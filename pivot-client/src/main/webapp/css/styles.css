@@ -133,6 +133,10 @@ body {
     padding: 0px;
 }
 
+#genOpGrid .ui-datagrid {
+    overflow: hidden;
+}
+
 #genOpGrid .ui-datagrid-content {
     background: ghostwhite;
     color: ghostwhite;
@@ -150,7 +154,7 @@ body {
 
 #genOpGrid .ui-fieldset .ui-fieldset-legend {
     background:linear-gradient(ghostwhite, #ADC1D6);
-    width: 115px;
+    width: 135px;
     height: 10px;
     font-size: 0.9em;
 }
@@ -163,10 +167,16 @@ body {
 }
 
 #genOpGrid .ui-fieldset {
-    width: 150px;
-    height: 250px;
+    width: 170px !important;
+    height: 250px !important;
     border: 1px solid #afacac;
     padding: 0px;
+}
+
+#genOpGrid .ui-fieldset-content {
+    height:220px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #genOpGrid .ui-datagrid-content-empty {

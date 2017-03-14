@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -220,6 +221,18 @@ public class ReportTableController extends AbstractTableController {
 
     public void setParameterController(ParameterReportController parameterController) {
         this.parameterController = parameterController;
+    }
+
+    public String formatField(Object o) {
+        if(o != null) {
+            String val = o.toString();
+            if(val.matches("^\\-?\\d+\\.\\d+$")) {
+                return String.valueOf((double)Math.round(Double.valueOf(val)*100)/100);
+            }
+            return val;
+        } else {
+            return "";
+        }
     }
 
     private class TreeNodeContainer {
