@@ -140,7 +140,7 @@
 
     <h:panelGrid rendered="#{reportTableController.reportEnable}" style="width:#{reportTableController.dynamicWidth}">
         <h:form>
-            <p:treeTable value="#{reportTableController.rootNode}" var="message">
+            <p:treeTable value="#{reportTableController.rootNode}" var="message" resizableColumns="true">
                 <f:facet name="header">
                     <h:outputText value="#{reportTableController.reportGenerated}"/>
                 </f:facet>
