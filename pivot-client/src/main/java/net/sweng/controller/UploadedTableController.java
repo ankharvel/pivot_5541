@@ -8,7 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 import java.io.File;
-import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -19,7 +18,7 @@ import static net.sweng.config.SessionKeys.TEMP_FOLDER_PATH;
 
 @ManagedBean
 @SessionScoped
-public class UploadedTableController extends AbstractTableController implements Serializable {
+public class UploadedTableController extends AbstractTableController {
 
     private static final Logger logger = Logger.getGlobal();
 

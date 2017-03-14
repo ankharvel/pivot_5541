@@ -15,10 +15,6 @@ public class TableSchema implements Serializable {
         this.columnSchema = new HashMap<>();
     }
 
-    public void putType(String columnName, DataType type) {
-        columnSchema.put(columnName, type);
-    }
-
     public DataType getColumnType(String columnName) {
         if(columnSchema.get(columnName) != null)
             return columnSchema.get(columnName);

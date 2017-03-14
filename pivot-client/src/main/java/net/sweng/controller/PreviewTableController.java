@@ -6,11 +6,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
-import java.io.Serializable;
 
 @ManagedBean
 @SessionScoped
-public class PreviewTableController extends AbstractTableController implements Serializable {
+public class PreviewTableController extends AbstractTableController {
 
     @ManagedProperty(value = "#{uploadedTableController}")
     private UploadedTableController uploadedFilesTableController;

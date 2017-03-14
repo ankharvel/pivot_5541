@@ -24,13 +24,13 @@
                     <p:ajax event="cellEdit" listener="#{columnTypeTableController.onCellEdit}" update=":leftMenu:messages" />
 
                     <p:column headerText="#{msg.header_column}">
-                        <h:outputLabel style="float: left;text-align:start" value="#{message[msg.header_column]}" />
+                        <h:outputText style="float: left;text-align:start" value="#{message[msg.header_column]}" />
                     </p:column>
 
                     <p:column headerText="#{msg.header_type}">
                         <p:cellEditor>
                             <f:facet name="output">
-                                <h:outputLabel value="#{columnTypeTableController.getLabel(message[msg.header_type])}" style="float: left;text-align:start" />
+                                <h:outputText value="#{columnTypeTableController.getLabel(message[msg.header_type])}" style="float: left;text-align:start" />
                                 <i class="fa fa-pencil" style="float:right;color:#F2BC00"/>
                             </f:facet>
                             <f:facet name="input">
