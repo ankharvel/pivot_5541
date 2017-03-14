@@ -133,10 +133,6 @@ body {
     padding: 0px;
 }
 
-#genOpGrid .ui-datagrid {
-    overflow: hidden;
-}
-
 #genOpGrid .ui-datagrid-content {
     background: ghostwhite;
     color: ghostwhite;
@@ -171,12 +167,6 @@ body {
     height: 250px !important;
     border: 1px solid #afacac;
     padding: 0px;
-}
-
-#genOpGrid .ui-fieldset-content {
-    height:220px;
-    overflow-x: hidden;
-    overflow-y: auto;
 }
 
 #genOpGrid .ui-datagrid-content-empty {

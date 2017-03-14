@@ -4,6 +4,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
         >
+    <link href="./css/#{parameterReportController.customStyle}.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript">
         function handleDrop(event, ui) {
             var droppedCol = ui.draggable;
@@ -28,7 +29,6 @@
         </h:panelGrid>
 
         <p:spacer height="20"/>
-
 
         <h:panelGrid columns="9" rendered="#{parameterReportController.enableDragMenu}">
             <p:fieldset id="dragSourceArea" legend="#{msg.header_source}">

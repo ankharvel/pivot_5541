@@ -3,6 +3,7 @@ package net.sweng.controller;
 import net.sweng.domain.*;
 import org.primefaces.event.DragDropEvent;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
@@ -21,6 +22,8 @@ import static net.sweng.config.SessionKeys.TABLE_SCHEMA_CATALOGUE;
 @SessionScoped
 public class ParameterReportController extends AbstractView {
 
+    private static final int MAX_RECORDS = 8;
+
     private List<GenericRow> columnSource;
     private List<GenericRow> reportRows;
     private List<GenericRow> reportColumns;
@@ -30,6 +33,12 @@ public class ParameterReportController extends AbstractView {
     private boolean enableDragMenu;
     private String currentFileName;
     private AggregationType aggregationType;
+    private String customStyle;
+
+    @PostConstruct
+    private void init(){
+        customStyle = bundle.getString("style_default");
+    }
 
     public void initialize(String fileName) {
         if(fileName == null || fileName.isEmpty()) {
@@ -46,6 +55,8 @@ public class ParameterReportController extends AbstractView {
         this.reportFilters = new LinkedList<>();
         this.reportField = new LinkedList<>();
         this.columnSource.sort(new GenericRowComparator());
+
+        customStyle = columnSource.size() > MAX_RECORDS ? bundle.getString("style_scroll") : bundle.getString("style_default");
         enableDragMenu = true;
     }
 
@@ -177,6 +188,10 @@ public class ParameterReportController extends AbstractView {
 
     public AggregationType getAggregationType() {
         return aggregationType;
+    }
+
+    public String getCustomStyle() {
+        return customStyle;
     }
 
     public boolean isEnableDragMenu() {

@@ -1,0 +1,10 @@
+#genOpGrid .ui-datagrid {
+    overflow: hidden;
+}
+
+
+#genOpGrid .ui-fieldset-content {
+    height:220px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
