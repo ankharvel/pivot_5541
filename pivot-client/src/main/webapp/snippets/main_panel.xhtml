@@ -4,8 +4,7 @@
                 xmlns:p="http://primefaces.org/ui"
         >
 
-    <div class="ui-g" style="background: linear-gradient(to right, #7297BA , ghostwhite);
-        height: 40px;padding-left: 10px;padding-top: 10px;color: white;font-weight: bolder;">
+    <div class="ui-g">
         <div class="ui-g-12 ui-g-nopad">
             <h:panelGroup>
                 <i class="#{menuController.iconClass}" style="font-size: 1.2em; float: left"/>
@@ -19,11 +18,12 @@
         <ui:include src="load_file.xhtml"/>
     </h:panelGroup>
 
-    <h:panelGroup rendered="#{menuController.uploadDBEnable or menuController.relationEnable
+    <h:panelGrid rendered="#{menuController.uploadDBEnable or menuController.relationEnable
         or menuController.exportEnable}">
         <p:spacer height="50"/>
-        <h:graphicImage url="./images/underconstruction.png"/>
-    </h:panelGroup>
+        <h:graphicImage url="./images/underconstruction.png" styleClass="pt-courtesy"/>
+        <h:outputText value="#{msg.ack_digitalart}" styleClass="pt-courtesy"/>
+    </h:panelGrid>
 
     <h:panelGroup rendered="#{menuController.dataTypeEnable}">
         <p:spacer width="20"/>
