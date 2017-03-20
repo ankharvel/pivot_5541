@@ -8,7 +8,7 @@
     <parent>
         <artifactId>pivot</artifactId>
         <groupId>org.concordia</groupId>
-        <version>${project.build.version}</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>pivot-server</artifactId>

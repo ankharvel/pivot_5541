@@ -7,7 +7,7 @@
 
     <groupId>org.concordia</groupId>
     <artifactId>pivot</artifactId>
-    <version>${project.build.version}</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
 
     <modules>
