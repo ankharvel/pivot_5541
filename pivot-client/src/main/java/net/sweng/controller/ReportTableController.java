@@ -11,7 +11,7 @@ import org.primefaces.model.TreeNode;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.event.ActionEvent;
+import javax.faces.event.FacesEvent;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +45,7 @@ public class ReportTableController extends AbstractTableController {
     }
 
     @Override
-    public void fillRecords(ActionEvent event) {
+    public void fillRecords(FacesEvent event) {
         try {
             ReportParameters parameters = parameterController.generateParameters();
             TableData data = pivotController.generateReportFromCSV(parameters);

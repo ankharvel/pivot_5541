@@ -7,6 +7,7 @@ import org.primefaces.model.UploadedFile;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.FacesEvent;
 import java.io.File;
 import java.util.*;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ public class UploadedTableController extends AbstractTableController {
     }
 
     @Override
-    public void fillRecords(ActionEvent event) {
+    public void fillRecords(FacesEvent event) {
         List<GenericRow> data = new LinkedList<>();
         String columnName = bundle.getString("header_uploaded_files");
         uploadedFiles.stream().forEach(c -> data.add(GenericRow.createSingleton(columnName, c)));

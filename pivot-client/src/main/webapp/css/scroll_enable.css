@@ -1,9 +1,9 @@
-#genOpGrid .ui-datagrid {
+.pt-drag-menu .ui-datagrid {
     overflow: hidden;
 }
 
 
-#genOpGrid .ui-fieldset-content {
+.pt-drag-menu .ui-fieldset-content {
     height:220px;
     overflow-x: hidden;
     overflow-y: auto;

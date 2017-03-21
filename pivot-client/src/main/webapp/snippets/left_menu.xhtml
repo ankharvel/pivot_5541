@@ -20,7 +20,7 @@
                             icon="fa fa-group" ajax="false"/>
             </p:submenu>
             <p:submenu label="#{msg.menu_report}">
-                <p:menuitem value="#{msg.submenu_generate}" actionListener="#{menuController.generate}"
+                <p:menuitem id="reportPanel" value="#{msg.submenu_generate}" actionListener="#{menuController.generate}"
                             icon="fa fa-cubes" ajax="false"/>
                 <p:separator/>
                 <p:menuitem value="#{msg.submenu_export}" actionListener="#{menuController.export}"

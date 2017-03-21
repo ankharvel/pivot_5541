@@ -4,14 +4,8 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
         >
-    <h:panelGrid id="setTypeGrid" columns="4" rendered="#{not empty uploadedTableController.uploadedFiles}">
+    <h:panelGrid id="setTypeGrid" columns="2" rendered="#{columnTypeTableController.enableView}">
         <p:spacer width="10"/>
-
-        <h:form>
-            <ui:include src="components/uploaded_table.xhtml"/>
-        </h:form>
-
-        <p:spacer width="100"/>
 
         <h:panelGrid rendered="#{columnTypeTableController.activeTable ne null}" style="vertical-align: top">
             <h:form>

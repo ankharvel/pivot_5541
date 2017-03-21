@@ -4,14 +4,15 @@ import net.sweng.domain.DataType;
 import net.sweng.domain.GenericRow;
 import net.sweng.domain.TableCatalogue;
 import net.sweng.domain.TableSchema;
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.CellEditEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.ValueChangeEvent;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -26,10 +27,8 @@ import static net.sweng.config.SessionKeys.TABLE_SCHEMA_CATALOGUE;
 @SessionScoped
 public class ColumnTypeTableController extends AbstractTableController implements Serializable {
 
-    @ManagedProperty(value = "#{uploadedTableController}")
-    private UploadedTableController uploadedFilesTableController;
-
     private String activeTable;
+    private boolean enableView;
 
     private TableCatalogue catalogue;
 
@@ -41,10 +40,15 @@ public class ColumnTypeTableController extends AbstractTableController implement
         createDynamicColumns();
     }
 
-    public void fillRecords(ActionEvent event) {
-        String fileName = (String) uploadedFilesTableController.getSelectedFile().get(bundle.getString("header_uploaded_files"));
+    public void fillRecords(FacesEvent event) {
+        String fileName = (String) ((ValueChangeEvent)event).getNewValue();
+        if(StringUtils.isBlank(fileName)) {
+            enableView = false;
+            return;
+        }
         setRegisters(catalogue.get(fileName));
         activeTable = fileName;
+        enableView = true;
     }
 
     private List<GenericRow> obtainData(String fileName) {
@@ -72,6 +76,10 @@ public class ColumnTypeTableController extends AbstractTableController implement
         return bundle.getString(type.getLbl());
     }
 
+    public boolean isEnableView() {
+        return enableView;
+    }
+
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
@@ -87,16 +95,6 @@ public class ColumnTypeTableController extends AbstractTableController implement
                     ));
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-    }
-
-//---------------------------- SETTERS ------------------------------------------------
-
-    /**
-     * All the setters are required to autowired the properties
-     */
-
-    public void setUploadedFilesTableController(UploadedTableController uploadedFilesTableController) {
-        this.uploadedFilesTableController = uploadedFilesTableController;
     }
 
 }

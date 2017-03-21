@@ -1,6 +1,7 @@
 package net.sweng.controller;
 
 import net.sweng.domain.*;
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.DragDropEvent;
 
 import javax.annotation.PostConstruct;
@@ -41,7 +42,7 @@ public class ParameterReportController extends AbstractView {
     }
 
     public void initialize(String fileName) {
-        if(fileName == null || fileName.isEmpty()) {
+        if(StringUtils.isBlank(fileName)) {
             enableDragMenu = false;
             currentFileName = null;
             return;

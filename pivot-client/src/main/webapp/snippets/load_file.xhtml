@@ -9,7 +9,7 @@
         <p:spacer height="20"/>
         <p:fileUpload fileUploadListener="#{uploadedTableController.fileUploadListener}"
                       oncomplete="if(this.files.length == 0) refresh();" mode="advanced" dragDropSupport="false"
-                      update="uploadMsg" sizeLimit="100000000" allowTypes="/(\.)(txt|TXT|csv|CSV)$/" />
+                      update="uploadMsg" sizeLimit="100000000" allowTypes="/(\.)(txt|TXT|csv|CSV)$/" multiple="true"/>
         <p:growl id="uploadMsg" showDetail="true" />
 
         <h:panelGrid columns="2" rendered="#{not empty uploadedTableController.uploadedFiles}">

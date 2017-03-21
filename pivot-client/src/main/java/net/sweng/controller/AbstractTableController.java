@@ -7,7 +7,7 @@ import org.springframework.web.jsf.FacesContextUtils;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import javax.faces.event.FacesEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public abstract class AbstractTableController extends AbstractView {
 
     public abstract void initialize();
 
-    public abstract void fillRecords(ActionEvent event);
+    public abstract void fillRecords(FacesEvent event);
 
     public List<ColumnModel> getColumns() {
         return columns;
