@@ -12,7 +12,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,14 +35,12 @@ public class ReportTableController extends AbstractTableController {
     private boolean reportEnable;
     private String reportGenerated;
     
-    private String lblRows;
     private String lblTotal;
     private String dynamicWidth;
 
     @Override
     public void initialize() {
         createDynamicColumns();
-        lblRows = bundle.getString("lbl_row");
         lblTotal = bundle.getString("lbl_total");
     }
 
@@ -52,7 +49,7 @@ public class ReportTableController extends AbstractTableController {
         try {
             ReportParameters parameters = parameterController.generateParameters();
             TableData data = pivotController.generateReportFromCSV(parameters);
-            List<String> headers = obtainHeaders(data, lblRows);
+            List<String> headers = obtainHeaders(data);
             setColumnKeys(headers.toArray(new String[headers.size()]));
             updateDynamicWidth(headers.size());
             createDynamicColumns();
@@ -68,6 +65,7 @@ public class ReportTableController extends AbstractTableController {
 
     private TreeNode obtainTree(TableData td, List<String> headers) {
         TreeNode root = new DefaultTreeNode(new GenericRow(), null);
+        root.setExpanded(true);
         if(headers.size() == 1) {
             GenericRow row = new GenericRow();
             row.put(headers.get(0), td.getData().get(0).get(td.getColumnNames()[0]));
@@ -80,8 +78,10 @@ public class ReportTableController extends AbstractTableController {
         String key;
         String aggregation = obtainAggregation(td.getColumnNames());
         GenericRow totalRow = new GenericRow();
-        headers.stream().forEach(r -> totalRow.put(r, 0D));
-        totalRow.put(lblRows, lblTotal);
+        headers.stream().filter(s -> !(obtainRows(td.getColumnNames()).contains(s))).forEach(r -> totalRow.put(r, 0D));
+        if(!obtainRows(td.getColumnNames()).isEmpty()) {
+            totalRow.put(obtainRows(td.getColumnNames()).iterator().next(), lblTotal);
+        }
         totalRow.put(LB_EMPTY, aggregation);
         List<String> rawColumns = obtainColumns(td.getColumnNames());
         for(GenericRow inputRow: td.getData()) {
@@ -91,7 +91,7 @@ public class ReportTableController extends AbstractTableController {
                 key = key + "-" + inputRow.get(rowLbl);
                 Pair<TreeNode, GenericRow> pairRow = container.getRow(key, parent);
                 for(String header: headers) {
-                    addRowInformation(inputRow, pairRow.getValue(), header, rowLbl, aggregation, rawColumns, lblRows);
+                    addRowInformation(inputRow, pairRow.getValue(), header, rowLbl, aggregation, rawColumns);
                     if(!rawColumns.isEmpty() && parent == root) {
                         incrementTotalRow(inputRow, totalRow, header, aggregation, rawColumns);
                     }
@@ -100,7 +100,7 @@ public class ReportTableController extends AbstractTableController {
             }
             if(!rawColumns.isEmpty() && obtainRows(td.getColumnNames()).isEmpty()) {
                 for(String header: headers) {
-                    addRowInformation(inputRow, totalRow, header, null, aggregation, rawColumns, lblRows);
+                    addRowInformation(inputRow, totalRow, header, null, aggregation, rawColumns);
                 }
             }
             if(rawColumns.isEmpty()) {
@@ -113,8 +113,8 @@ public class ReportTableController extends AbstractTableController {
     }
 
     private static void addRowInformation(GenericRow inputRow, GenericRow outRow, String header,
-                                          String rowLbl, String aggregation, List<String> rawColumns, String lblRows) {
-        if(header.equalsIgnoreCase(lblRows)) {
+                                          String rowLbl, String aggregation, List<String> rawColumns) {
+        if(header.equalsIgnoreCase(rowLbl)) {
             outRow.put(header, inputRow.get(rowLbl));
         } else if(header.equalsIgnoreCase(aggregation)) {
             if (outRow.get(header) == null) {
@@ -124,7 +124,7 @@ public class ReportTableController extends AbstractTableController {
                 Double val2 = Double.valueOf(outRow.get(header).toString());
                 outRow.put(header, val1 + val2);
             }
-        } else {
+        } else if (!rawColumns.isEmpty()) {
             for(String col: rawColumns) {
                 if(!header.equalsIgnoreCase((String)inputRow.get(col + COL_SUFFIX))) return;
             }
@@ -155,20 +155,20 @@ public class ReportTableController extends AbstractTableController {
         }
     }
 
-    private static List<String> obtainHeaders(TableData data, String lblRows) {
+    private static List<String> obtainHeaders(TableData data) {
         String aggLbl = obtainAggregation(data.getColumnNames());
         List<String> rawColumns = obtainColumns(data.getColumnNames());
         List<String> headers = new ArrayList<>();
         if(obtainRows(data.getColumnNames()).isEmpty() && rawColumns.isEmpty()) {
             headers.add(aggLbl);
         } else if(!obtainRows(data.getColumnNames()).isEmpty() && rawColumns.isEmpty()) {
-            headers.add(lblRows);
+            headers.addAll(obtainRows(data.getColumnNames()));
             headers.add(aggLbl);
         } else if(obtainRows(data.getColumnNames()).isEmpty() && !rawColumns.isEmpty()) {
             headers.add(LB_EMPTY);
             rawColumns.stream().forEach(lbl -> headers.addAll(data.getPivotColumnValues(lbl)));
         } else {
-            headers.add(lblRows);
+            headers.addAll(obtainRows(data.getColumnNames()));
             rawColumns.stream().forEach(lbl -> headers.addAll(data.getPivotColumnValues(lbl)));
         }
 
@@ -179,8 +179,7 @@ public class ReportTableController extends AbstractTableController {
         for(String s: headers) {
             if(s.endsWith(AGG_SUFFIX)) return s.replace(AGG_SUFFIX, "");
         }
-        //TODO: Fix exception
-        throw new RuntimeException();
+        return "";
     }
 
     private static List<String> obtainRows(String[] headers) {
@@ -249,6 +248,7 @@ public class ReportTableController extends AbstractTableController {
                 GenericRow row = new GenericRow();
                 pair = Pair.of(new DefaultTreeNode(row, parent), row);
                 treeNodeMap.put(key, pair);
+                pair.getKey().setExpanded(true);
             }
             return pair;
         }
