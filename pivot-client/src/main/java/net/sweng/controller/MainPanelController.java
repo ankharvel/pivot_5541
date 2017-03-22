@@ -34,6 +34,17 @@ public class MainPanelController extends AbstractView {
         accordionIndex = event.getComponent().getChildren().indexOf(event.getTab());
     }
 
+    public void loadCurrentParameters() {
+        accordionIndex = 0;
+        parameterReportController.loadParameters();
+        columnTypeTableController.fillRecords(parameterReportController.getCurrentFileName());
+    }
+
+    public void clearParameters() {
+        accordionIndex = 0;
+        parameterReportController.clearCurrentFile();
+    }
+
     public int getAccordionIndex() {
         return accordionIndex;
     }

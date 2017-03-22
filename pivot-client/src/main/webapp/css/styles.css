@@ -66,6 +66,14 @@ body {
     color: #7297BA;
 }
 
+.ui-button-text-icon-left .ui-button-text {
+    padding: .35em 1em .2em 2.1em;
+}
+
+#repMenu .ui-button-text-icon-left .ui-button-text {
+    font-size: 0.9em;
+}
+
 .ui-fileupload-buttonbar {
     width: 500px;
     padding: .2em .4em;
@@ -201,6 +209,16 @@ body {
 
 .pt-label-option {
     font-size:0.9em;
+}
+
+.pt-ext-button {
+    width: 120px;
+    text-align: left;
+}
+
+.pt-ext-button .ui-icon, .ui-button-text-icon-right .ui-icon {
+    margin-left: 0.5em;
+    font-size: 0.75em;
 }
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {

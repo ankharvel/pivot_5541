@@ -46,6 +46,10 @@ public class ColumnTypeTableController extends AbstractTableController implement
             enableView = false;
             return;
         }
+        fillRecords(fileName);
+    }
+
+    public void fillRecords(String fileName) {
         setRegisters(catalogue.get(fileName));
         activeTable = fileName;
         enableView = true;

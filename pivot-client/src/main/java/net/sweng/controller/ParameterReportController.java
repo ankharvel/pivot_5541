@@ -8,10 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static net.sweng.config.HttpSessionHandler.getSessionAttribute;
 import static net.sweng.config.SessionKeys.TABLE_SCHEMA_CATALOGUE;
@@ -35,8 +32,9 @@ public class ParameterReportController extends AbstractView {
     private ReportParameters selectedParameters;
     private boolean enableDragMenu;
     private String currentFileName;
-    private AggregationType aggregationType;
+    private String aggregationName;
     private String customStyle;
+    private int editIndex = -1;
 
     @PostConstruct
     private void init(){
@@ -94,10 +92,15 @@ public class ParameterReportController extends AbstractView {
         parameters.setReportColumns(toDetails(reportColumns));
         parameters.setReportFilter(toDetails(reportFilters));
         parameters.setField(toDetails(reportField).iterator().next());
-        parameters.setAggregationType(aggregationType);
+        parameters.setAggregationType(AggregationType.valueOf(aggregationName));
         parameters.setFileName(currentFileName);
-        parametersList.add(parameters);
         selectedParameters = parameters;
+        if(editIndex >= 0) {
+            parametersList.remove(editIndex);
+            parametersList.add(editIndex, parameters);
+        } else {
+            parametersList.add(parameters);
+        }
     }
 
     public ReportParameters generateParameters() {
@@ -151,18 +154,35 @@ public class ParameterReportController extends AbstractView {
     }
 
     public void onMenuChange(ValueChangeEvent event) {
+        editIndex = -1;
+        aggregationName = "";
         String value = (String) event.getNewValue();
         initialize(value);
     }
 
-    public void onAggregationChange(ValueChangeEvent event) {
-        if(event.getNewValue() == null || ((String) event.getNewValue()).isEmpty()) {
-            aggregationType = null;
-        } else {
-            String value = (String) event.getNewValue();
-            aggregationType = AggregationType.valueOf(value);
-        }
+    public void loadParameters() {
+        currentFileName = selectedParameters.getFileName();
+        initialize(currentFileName);
+        updateColumnParameters(selectedParameters.getReportRows(), reportRows);
+        updateColumnParameters(selectedParameters.getReportColumns(), reportColumns);
+        updateColumnParameters(selectedParameters.getReportFilter(), reportFilters);
+        updateColumnParameters(Collections.singletonList(selectedParameters.getField()), reportField);
+        aggregationName = selectedParameters.getAggregationType().name();
+        editIndex = parametersList.indexOf(selectedParameters);
+    }
 
+    private void updateColumnParameters(List<ColumnDetail> source, List<GenericRow> toUpdate) {
+        source.stream().forEachOrdered(data -> {
+            GenericRow row = columnSource.stream().filter(r ->
+                    r.get(bundle.getString("header_column")).toString().equalsIgnoreCase(data.getColumnName())).findFirst().get();
+            toUpdate.add(row);
+            columnSource.remove(row);
+        });
+    }
+
+    public void clearCurrentFile() {
+        currentFileName = "";
+        aggregationName = "";
     }
 
     private class GenericRowComparator implements Comparator<GenericRow> {
@@ -203,8 +223,12 @@ public class ParameterReportController extends AbstractView {
         return currentFileName;
     }
 
-    public AggregationType getAggregationType() {
-        return aggregationType;
+    public String getAggregationName() {
+        return aggregationName;
+    }
+
+    public void setAggregationName(String aggregationName) {
+        this.aggregationName = aggregationName;
     }
 
     public String getCustomStyle() {
@@ -213,6 +237,10 @@ public class ParameterReportController extends AbstractView {
 
     public boolean isEnableDragMenu() {
         return enableDragMenu;
+    }
+
+    public void setCurrentFileName(String currentFileName) {
+        this.currentFileName = currentFileName;
     }
 
     public ReportParameters getSelectedParameters() {
@@ -231,4 +259,5 @@ public class ParameterReportController extends AbstractView {
             addErrorMessage("Pailas");
         }
     }
+
 }

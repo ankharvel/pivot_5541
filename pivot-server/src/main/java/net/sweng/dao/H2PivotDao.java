@@ -13,9 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static net.sweng.config.DBConfig.getSessionIdPrefix;
@@ -75,7 +73,9 @@ public class H2PivotDao implements PivotDao {
     @Override
     public String[] getHeadersFromCsv(String sourcePath) {
         Set<String> columns = jdbcTemplate.queryForList(MessageFormat.format(SELECT_FROM_CSV + " LIMIT 1", sourcePath)).get(0).keySet();
-        return columns.toArray(new String[columns.size()]);
+        List<String> cols = new ArrayList<>(columns);
+        Collections.sort(cols);
+        return cols.toArray(new String[cols.size()]);
     }
 
     @Override

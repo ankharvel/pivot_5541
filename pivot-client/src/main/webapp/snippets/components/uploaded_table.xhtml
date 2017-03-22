@@ -5,7 +5,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
         >
     <p:dataTable id="uploadFileTb" var="message" value="#{uploadedTableController.registers}" style="width: 250px"
-                 selectionMode="single" selection="#{uploadedTableController.selectedFile}" rowKey="#{message[msg.header_uploaded_files]}">
+                 selectionMode="single" selection="#{uploadedTableController.selectedFile}" rowKey="#{message[msg.header_uploaded_files]}"
+            sortBy="#{message[msg.header_uploaded_files]}">
         <p:ajax event="rowSelect" update="loadFileViewBtn" disabled="#{not menuController.uploadFileEnable}"/>
         <p:ajax event="rowUnselect" update="loadFileViewBtn" disabled="#{not menuController.uploadFileEnable}"/>
         <p:ajax event="rowSelect" update="confTypeBtn" disabled="#{not menuController.schemaEnable}"/>

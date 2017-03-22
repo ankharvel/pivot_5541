@@ -31,9 +31,9 @@
         <h:form>
             <h:panelGrid columns="2" cellpadding="5" width="450px">
                 <h:outputText for="cmb_source" value="#{msg.option_select_source}" styleClass="pt-label-option"/>
-                <p:selectOneMenu id="cmb_source"
+                <p:selectOneMenu id="cmb_source" onchange="submit();" style="width:180px"
                                  valueChangeListener="#{mainPanelController.onMenuChange}"
-                                 onchange="submit();" style="width:180px">
+                                 value="#{parameterReportController.currentFileName}">
                     <f:selectItem itemLabel=" " itemValue="" />
                     <f:selectItems value="#{uploadedTableController.uploadedFiles}"/>
                 </p:selectOneMenu>

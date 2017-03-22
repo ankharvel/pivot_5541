@@ -5,14 +5,21 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
         >
     <h:panelGrid rendered="#{reportTableController.reportEnable}" style="width:#{reportTableController.dynamicWidth}">
-        <h:form>
-            <h:panelGrid columns="2" cellpadding="5" width="450px">
-                <h:outputText for="cmb_report" value="#{msg.option_select_report}" styleClass="pt-label-option"/>
+        <h:form id="repMenu">
+            <h:panelGrid columns="5" cellpadding="5" width="600px">
                 <p:selectOneMenu id="cmb_report" valueChangeListener="#{reportTableController.fillRecords}" converter="parameterConverter"
                                  onchange="submit();" style="width:180px" value="#{parameterReportController.selectedParameters}">
                     <f:selectItems value="#{parameterReportController.parametersList}" var="item"
                                    itemLabel="#{parameterReportController.obtainLabel(item)}" itemValue="#{item}"/>
                 </p:selectOneMenu>
+                <p:spacer width="50"/>
+                <p:commandButton id="editReportBtn" icon="fa fa-pencil" value="#{msg.btn_edit}" styleClass="pt-ext-button"
+                                 actionListener="#{mainPanelController.loadCurrentParameters}"
+                                 ajax="true" oncomplete="reloadConfigurePanel();"/>
+                <p:spacer width="20"/>
+                <p:commandButton id="newReportBtn" icon="fa fa-plus" value="#{msg.btn_new}" styleClass="pt-ext-button"
+                                 actionListener="#{mainPanelController.clearParameters}"
+                                 ajax="true" oncomplete="reloadConfigurePanel();"/>
             </h:panelGrid>
         </h:form>
         <h:form>

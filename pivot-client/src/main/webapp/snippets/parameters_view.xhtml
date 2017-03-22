@@ -76,7 +76,7 @@
                     <div>
                         <h:panelGrid columns="1" cellpadding="0">
                             <p:selectOneMenu id="aggregateComp" style="width: 132px" onchange="submit();"
-                                             valueChangeListener="#{parameterReportController.onAggregationChange}">
+                                             value="#{parameterReportController.aggregationName}">
                                 <f:selectItem itemLabel=" " itemValue="" />
                                 <f:selectItem itemLabel="#{msg.lbl_count}" itemValue="COUNT" />
                                 <f:selectItem itemLabel="#{msg.lbl_sum}" itemValue="SUM" />
@@ -105,9 +105,9 @@
         <h:panelGrid columns="1" width="100">
             <p:commandButton id="generateBtn" process="genOpGrid" icon="fa fa-play-circle-o" value="#{msg.btn_generate}"
                              actionListener="#{reportTableController.addParametersAndFillRecords}" ajax="true"
-                             disabled="#{parameterReportController.aggregationType eq null or
+                             disabled="#{empty parameterReportController.aggregationName or
                                 empty parameterReportController.reportField}"
-                             oncomplete="reloadReportPanel();"
+                             oncomplete="reloadReportPanel();" styleClass="pt-ext-button"
                              rendered="#{not empty parameterReportController.currentFileName}"/>
         </h:panelGrid>
 

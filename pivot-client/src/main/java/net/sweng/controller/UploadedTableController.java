@@ -73,8 +73,10 @@ public class UploadedTableController extends AbstractTableController {
         this.selectedFile = selectedFile;
     }
 
-    public Set<String> getUploadedFiles() {
-        return uploadedFiles;
+    public List<String> getUploadedFiles() {
+        List<String> files = new ArrayList<>(uploadedFiles);
+        Collections.sort(files, (o1, o2) -> o1.toLowerCase().compareTo(o2.toLowerCase()));
+        return files;
     }
 
 }

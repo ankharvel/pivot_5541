@@ -13,7 +13,7 @@
                             icon="fa fa-database" ajax="false"/>
             </p:submenu>
             <p:submenu label="#{msg.menu_configure}">
-                <p:menuitem value="#{msg.submenu_schema}" actionListener="#{menuController.setSchema}"
+                <p:menuitem id="configurePanel" value="#{msg.submenu_schema}" actionListener="#{menuController.setSchema}"
                             icon="fa fa-expand" ajax="false"/>
                 <p:separator/>
                 <p:menuitem value="#{msg.submenu_set_relations}" actionListener="#{menuController.setRelations}"
