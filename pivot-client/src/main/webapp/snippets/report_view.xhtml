@@ -6,6 +6,16 @@
         >
     <h:panelGrid rendered="#{reportTableController.reportEnable}" style="width:#{reportTableController.dynamicWidth}">
         <h:form>
+            <h:panelGrid columns="2" cellpadding="5" width="450px">
+                <h:outputText for="cmb_report" value="#{msg.option_select_report}" styleClass="pt-label-option"/>
+                <p:selectOneMenu id="cmb_report" valueChangeListener="#{reportTableController.fillRecords}" converter="parameterConverter"
+                                 onchange="submit();" style="width:180px" value="#{parameterReportController.selectedParameters}">
+                    <f:selectItems value="#{parameterReportController.parametersList}" var="item"
+                                   itemLabel="#{parameterReportController.obtainLabel(item)}" itemValue="#{item}"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+        </h:form>
+        <h:form>
             <p:treeTable value="#{reportTableController.rootNode}" var="message" resizableColumns="true">
                 <f:facet name="header">
                     <h:outputText value="#{reportTableController.reportGenerated}"/>

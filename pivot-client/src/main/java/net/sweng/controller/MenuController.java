@@ -22,7 +22,7 @@ public class MenuController extends AbstractView {
 
     private boolean uploadFileEnable;
     private boolean uploadDBEnable;
-    private boolean dataTypeEnable;
+    private boolean schemaEnable;
     private boolean relationEnable;
     private boolean generateEnable;
     private boolean exportEnable;
@@ -43,11 +43,11 @@ public class MenuController extends AbstractView {
         addMessage(bundle.getString("info_not_available"), bundle.getString("info_under_construction"), FacesMessage.SEVERITY_ERROR);
     }
 
-    public void setDataType(ActionEvent event) {
+    public void setSchema(ActionEvent event) {
         if(getSessionAttribute(FILE_AVAILABLE, Boolean.class)) {
-            menuTitle = bundle.getString("subtitle_data_type");
+            menuTitle = bundle.getString("subtitle_schema");
             iconClass = "fa fa-expand";
-            enableView(DATA_TYPE);
+            enableView(SCHEMA);
         } else {
             addMessage(bundle.getString("err_unable_execute"), bundle.getString("adv_upload_first"), FacesMessage.SEVERITY_FATAL);
         }
@@ -85,8 +85,8 @@ public class MenuController extends AbstractView {
         return uploadDBEnable;
     }
 
-    public boolean isDataTypeEnable() {
-        return dataTypeEnable;
+    public boolean isSchemaEnable() {
+        return schemaEnable;
     }
 
     public boolean isRelationEnable() {
@@ -117,7 +117,7 @@ public class MenuController extends AbstractView {
     private void enableView(OptionView view) {
         this.uploadFileEnable = false;
         this.uploadDBEnable = false;
-        this.dataTypeEnable = false;
+        this.schemaEnable = false;
         this.relationEnable = false;
         this.generateEnable = false;
         this.exportEnable = false;
@@ -128,8 +128,8 @@ public class MenuController extends AbstractView {
             case CONNECT_DATABASE:
                 this.uploadDBEnable = true;
                 break;
-            case DATA_TYPE:
-                this.dataTypeEnable = true;
+            case SCHEMA:
+                this.schemaEnable = true;
                 break;
             case RELATIONS:
                 this.relationEnable = true;

@@ -7,7 +7,7 @@ public enum OptionView {
 
     UPLOAD_FILE,
     CONNECT_DATABASE,
-    DATA_TYPE,
+    SCHEMA,
     RELATIONS,
     GENERATE,
     EXPORT;

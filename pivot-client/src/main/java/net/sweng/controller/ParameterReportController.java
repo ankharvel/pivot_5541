@@ -31,6 +31,8 @@ public class ParameterReportController extends AbstractView {
     private List<GenericRow> reportFilters;
     private List<GenericRow> reportField;
 
+    private List<ReportParameters> parametersList;
+    private ReportParameters selectedParameters;
     private boolean enableDragMenu;
     private String currentFileName;
     private AggregationType aggregationType;
@@ -39,6 +41,7 @@ public class ParameterReportController extends AbstractView {
     @PostConstruct
     private void init(){
         customStyle = bundle.getString("style_default");
+        parametersList = new LinkedList<>();
     }
 
     public void initialize(String fileName) {
@@ -85,7 +88,7 @@ public class ParameterReportController extends AbstractView {
         columnSource.sort(new GenericRowComparator());
     }
 
-    public ReportParameters generateParameters() {
+    public void addParameters() {
         ReportParameters parameters = new ReportParameters();
         parameters.setReportRows(toDetails(reportRows));
         parameters.setReportColumns(toDetails(reportColumns));
@@ -93,7 +96,16 @@ public class ParameterReportController extends AbstractView {
         parameters.setField(toDetails(reportField).iterator().next());
         parameters.setAggregationType(aggregationType);
         parameters.setFileName(currentFileName);
-        return parameters;
+        parametersList.add(parameters);
+        selectedParameters = parameters;
+    }
+
+    public ReportParameters generateParameters() {
+        return selectedParameters;
+    }
+
+    public String obtainLabel(ReportParameters parameters) {
+        return String.valueOf(parametersList.indexOf(parameters) + 1).concat(". ").concat(parameters.getFileName());
     }
 
     private List<ColumnDetail> toDetails(List<GenericRow> rows) {
@@ -183,6 +195,10 @@ public class ParameterReportController extends AbstractView {
         return reportField;
     }
 
+    public List<ReportParameters> getParametersList() {
+        return parametersList;
+    }
+
     public String getCurrentFileName() {
         return currentFileName;
     }
@@ -197,5 +213,22 @@ public class ParameterReportController extends AbstractView {
 
     public boolean isEnableDragMenu() {
         return enableDragMenu;
+    }
+
+    public ReportParameters getSelectedParameters() {
+        return selectedParameters;
+    }
+
+    public void setSelectedParameters(ReportParameters selectedParameters) {
+        this.selectedParameters = selectedParameters;
+    }
+
+    public void setSelectedParameters(Object o) {
+        try {
+            this.selectedParameters = parametersList.stream().filter(
+                    p -> p.toString().equalsIgnoreCase(o.toString())).findFirst().get();
+        } catch (Exception ex) {
+            addErrorMessage("Pailas");
+        }
     }
 }

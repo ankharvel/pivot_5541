@@ -104,7 +104,7 @@
 
         <h:panelGrid columns="1" width="100">
             <p:commandButton id="generateBtn" process="genOpGrid" icon="fa fa-play-circle-o" value="#{msg.btn_generate}"
-                             actionListener="#{reportTableController.fillRecords}" ajax="true"
+                             actionListener="#{reportTableController.addParametersAndFillRecords}" ajax="true"
                              disabled="#{parameterReportController.aggregationType eq null or
                                 empty parameterReportController.reportField}"
                              oncomplete="reloadReportPanel();"

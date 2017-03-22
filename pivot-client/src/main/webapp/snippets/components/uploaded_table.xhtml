@@ -8,8 +8,8 @@
                  selectionMode="single" selection="#{uploadedTableController.selectedFile}" rowKey="#{message[msg.header_uploaded_files]}">
         <p:ajax event="rowSelect" update="loadFileViewBtn" disabled="#{not menuController.uploadFileEnable}"/>
         <p:ajax event="rowUnselect" update="loadFileViewBtn" disabled="#{not menuController.uploadFileEnable}"/>
-        <p:ajax event="rowSelect" update="confTypeBtn" disabled="#{not menuController.dataTypeEnable}"/>
-        <p:ajax event="rowUnselect" update="confTypeBtn" disabled="#{not menuController.dataTypeEnable}"/>
+        <p:ajax event="rowSelect" update="confTypeBtn" disabled="#{not menuController.schemaEnable}"/>
+        <p:ajax event="rowUnselect" update="confTypeBtn" disabled="#{not menuController.schemaEnable}"/>
         <p:columns value="#{uploadedTableController.columns}" var="column" columnIndexVar="colIndex">
             <f:facet name="header">
                 <h:outputText value="#{column.header}"/>
@@ -24,7 +24,7 @@
             <p:commandButton id="confTypeBtn" process="uploadFileTb" icon="ui-icon-search" value="#{msg.btn_configure}"
                              actionListener="#{columnTypeTableController.fillRecords}" ajax="false"
                              disabled="#{uploadedTableController.selectedFile eq null}"
-                             rendered="#{menuController.dataTypeEnable}"/>
+                             rendered="#{menuController.schemaEnable}"/>
         </f:facet>
     </p:dataTable>
 

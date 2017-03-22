@@ -26,12 +26,12 @@
         <h:outputText value="#{msg.ack_digitalart}" styleClass="pt-courtesy"/>
     </h:panelGrid>
 
-    <h:panelGroup rendered="#{menuController.dataTypeEnable}">
+    <h:panelGroup rendered="#{menuController.schemaEnable}">
         <p:spacer height="5"/>
         <h:form>
             <h:panelGrid columns="2" cellpadding="5" width="450px">
-                <h:outputText for="console" value="#{msg.option_select_source}" styleClass="pt-label-option"/>
-                <p:selectOneMenu id="console"
+                <h:outputText for="cmb_source" value="#{msg.option_select_source}" styleClass="pt-label-option"/>
+                <p:selectOneMenu id="cmb_source"
                                  valueChangeListener="#{mainPanelController.onMenuChange}"
                                  onchange="submit();" style="width:180px">
                     <f:selectItem itemLabel=" " itemValue="" />
@@ -40,7 +40,8 @@
             </h:panelGrid>
         </h:form>
         <p:spacer height="5"/>
-        <p:accordionPanel activeIndex="#{mainPanelController.accordionIndex}">
+        <p:accordionPanel activeIndex="#{mainPanelController.accordionIndex}"
+                          rendered="#{not empty parameterReportController.currentFileName}">
             <p:ajax event="tabChange" listener="#{mainPanelController.onTabChange}"/>
             <p:tab title="Report parameters">
                 <ui:include src="parameters_view.xhtml"/>

@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.FacesEvent;
+import javax.faces.event.ValueChangeEvent;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +48,9 @@ public class ReportTableController extends AbstractTableController {
     @Override
     public void fillRecords(FacesEvent event) {
         try {
+            if(event instanceof ValueChangeEvent)  {
+                parameterController.setSelectedParameters(((ValueChangeEvent) event).getNewValue());
+            }
             ReportParameters parameters = parameterController.generateParameters();
             TableData data = pivotController.generateReportFromCSV(parameters);
             List<String> headers = obtainHeaders(data);
@@ -61,6 +65,11 @@ public class ReportTableController extends AbstractTableController {
         } catch (Exception ex) {
             Logger.getGlobal().log(Level.SEVERE, ex.getMessage(), ex);
         }
+    }
+
+    public void addParametersAndFillRecords(FacesEvent event) {
+        parameterController.addParameters();
+        fillRecords(event);
     }
 
     private TreeNode obtainTree(TableData td, List<String> headers) {
