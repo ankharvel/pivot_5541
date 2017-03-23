@@ -64,6 +64,8 @@ public class ReportTableController extends AbstractTableController {
             ReportParameters parameters = parameterController.generateParameters();
             if(StringUtils.isNotBlank(selectedFilterValue)) {
                 parameters.setFilterValues(Collections.singletonList(selectedFilterValue));
+            } else {
+                parameters.setFilterValues(new ArrayList<>());
             }
             TableData data = pivotController.generateReportFromCSV(parameters);
             if(!parameters.getReportFilter().isEmpty()) {
