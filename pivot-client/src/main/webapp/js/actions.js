@@ -9,3 +9,7 @@ function reloadReportPanel(){
 function reloadConfigurePanel(){
     document.getElementById('leftMenu:configurePanel').click();
 }
+
+function reloadExportPanel(){
+    document.getElementById('leftMenu:exportPanel').click();
+}

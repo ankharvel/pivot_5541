@@ -74,6 +74,10 @@ body {
     font-size: 0.9em;
 }
 
+#expMenu .ui-button-text-icon-left .ui-button-text {
+    font-size: 0.9em;
+}
+
 .ui-fileupload-buttonbar {
     width: 500px;
     padding: .2em .4em;
@@ -223,7 +227,23 @@ body {
     font-size: 0.75em;
 }
 
+.pt-small-header {
+    font-size: 1.1em;
+    font-weight: bolder;
+}
+
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
     background: linear-gradient(to right, ghostwhite,#CFD6DE,#7297BA,#CFD6DE,ghostwhite);
     color: white;
 }
+
+#expMenu .ui-datatable thead th, .ui-datatable tfoot td {
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.ui-paginator.ui-paginator-top {
+    border-bottom: 0 none;
+    visibility: collapse;
+}
+

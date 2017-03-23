@@ -6,20 +6,23 @@
         >
     <h:panelGrid rendered="#{reportTableController.reportEnable}" style="width:#{reportTableController.dynamicWidth}">
         <h:form id="repMenu">
-            <h:panelGrid columns="5" cellpadding="5" width="600px">
+            <h:panelGrid columns="7" cellpadding="5" width="600px">
                 <p:selectOneMenu id="cmb_report" valueChangeListener="#{reportTableController.fillRecords}" converter="parameterConverter"
                                  onchange="submit();" style="width:180px" value="#{parameterReportController.selectedParameters}">
                     <f:selectItems value="#{parameterReportController.parametersList}" var="item"
                                    itemLabel="#{parameterReportController.obtainLabel(item)}" itemValue="#{item}"/>
                 </p:selectOneMenu>
-                <p:spacer width="50"/>
+                <p:spacer width="30"/>
                 <p:commandButton id="editReportBtn" icon="fa fa-pencil" value="#{msg.btn_edit}" styleClass="pt-ext-button"
                                  actionListener="#{mainPanelController.loadCurrentParameters}"
                                  ajax="true" oncomplete="reloadConfigurePanel();"/>
-                <p:spacer width="20"/>
+                <p:spacer width="10"/>
                 <p:commandButton id="newReportBtn" icon="fa fa-plus" value="#{msg.btn_new}" styleClass="pt-ext-button"
                                  actionListener="#{mainPanelController.clearParameters}"
                                  ajax="true" oncomplete="reloadConfigurePanel();"/>
+                <p:spacer width="10"/>
+                <p:commandButton id="exportReportBtn" icon="fa fa-download" value="#{msg.submenu_export}" styleClass="pt-ext-button"
+                                 ajax="true" oncomplete="reloadExportPanel();"/>
             </h:panelGrid>
             <h:panelGrid columns="3" width="300" rendered="#{not empty parameterReportController.selectedParameters.reportFilter}">
                 <h:outputText value="#{parameterReportController.formattedFilter}" styleClass="pt-label-option"/>
@@ -39,7 +42,7 @@
                     <f:facet name="header">
                         <h:outputText value="#{column.header}"/>
                     </f:facet>
-                    <h:outputText value="#{reportTableController.formatField(message[column.property])}"/>
+                    <h:outputText value="#{message[column.property]}"/>
                 </p:columns>
             </p:treeTable>
         </h:form>

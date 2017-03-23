@@ -33,6 +33,9 @@ public class ReportTableController extends AbstractTableController {
     @ManagedProperty(value = "#{parameterReportController}")
     private ParameterReportController parameterController;
 
+    @ManagedProperty(value = "#{exportController}")
+    private ExportController exportController;
+
     private TreeNode rootNode;
     private boolean reportEnable;
     private String reportGenerated;
@@ -78,6 +81,7 @@ public class ReportTableController extends AbstractTableController {
             setRootNode(obtainTree(data, headers));
             reportEnable = true;
             reportGenerated = parameters.getFileName();
+            createExportView(headers);
         } catch (InvalidDataTypeException ex) {
             addErrorMessage(ex.getMessage());
         } catch (Exception ex) {
@@ -148,8 +152,8 @@ public class ReportTableController extends AbstractTableController {
             if (outRow.get(header) == null) {
                 outRow.put(header, inputRow.get(header + AGG_SUFFIX));
             } else {
-                Double val1 = Double.valueOf((String) inputRow.get(header + AGG_SUFFIX));
-                Double val2 = Double.valueOf(outRow.get(header).toString());
+                Double val1 = getDoubleValue(inputRow.get(header + AGG_SUFFIX));
+                Double val2 = getDoubleValue(outRow.get(header));
                 outRow.put(header, val1 + val2);
             }
         } else if (!rawColumns.isEmpty()) {
@@ -159,16 +163,16 @@ public class ReportTableController extends AbstractTableController {
             if (outRow.get(header) == null) {
                 outRow.put(header, inputRow.get(aggregation + AGG_SUFFIX));
             } else {
-                Double val1 = Double.valueOf((String) inputRow.get(aggregation + AGG_SUFFIX));
-                Double val2 = Double.valueOf(outRow.get(header).toString());
+                Double val1 = getDoubleValue(inputRow.get(aggregation + AGG_SUFFIX));
+                Double val2 = getDoubleValue(outRow.get(header));
                 outRow.put(header, val1 + val2);
             }
         }
     }
 
     private static void incrementTotalRow(GenericRow inputRow, GenericRow totalRow, String aggregation) {
-        Double val1 = (Double) totalRow.get(aggregation);
-        Double val2 = Double.valueOf((String) inputRow.get(aggregation + AGG_SUFFIX));
+        Double val1 = getDoubleValue(totalRow.get(aggregation));
+        Double val2 = getDoubleValue(inputRow.get(aggregation + AGG_SUFFIX));
         totalRow.put(aggregation, val1 + val2);
     }
 
@@ -176,10 +180,18 @@ public class ReportTableController extends AbstractTableController {
                                           String aggregation, List<String> rawColumns) {
         for(String col: rawColumns) {
             if(header.equalsIgnoreCase((String)inputRow.get(col + COL_SUFFIX))) {
-                Double val1 = (Double) totalRow.get(header);
-                Double val2 = Double.valueOf((String) inputRow.get(aggregation + AGG_SUFFIX));
+                Double val1 = getDoubleValue(totalRow.get(header));
+                Double val2 = getDoubleValue(inputRow.get(aggregation + AGG_SUFFIX));
                 totalRow.put(header, val1 + val2);
             }
+        }
+    }
+
+    private static double getDoubleValue(Object value) {
+        if (value instanceof Double) {
+            return (Double) value;
+        } else {
+            return Double.valueOf((String) value);
         }
     }
 
@@ -201,6 +213,47 @@ public class ReportTableController extends AbstractTableController {
         }
 
         return headers;
+    }
+
+    private void createExportView(List<String> headers) {
+        List<GenericRow> plainData = obtainPlainData(rootNode);
+        TableData td = new TableData(headers.toArray(new String[headers.size()]), plainData);
+        exportController.setTableData(td);
+        exportController.fillRecords(null);
+        exportController.setReportTableName(reportGenerated);
+    }
+
+    private List<GenericRow> obtainPlainData(TreeNode root) {
+        List<GenericRow> dt = new ArrayList<>();
+        int size = root.getChildCount();
+        List<TreeNode> nodeList = new ArrayList<>();
+        nodeList.addAll(root.getChildren());
+        int index = 0;
+        TreeNode parent = null;
+        while(size > 0) {
+            while (size > 0) {
+                if(dt.isEmpty()) {
+                    List<TreeNode> copyList = new ArrayList<>(nodeList);
+                    nodeList.clear();
+                    copyList.forEach(n -> {
+                        dt.add((GenericRow) n.getData());
+                        nodeList.addAll(n.getChildren());
+                    });
+                    break;
+                }
+                TreeNode node = nodeList.remove(0);
+                if(parent == null || node.getParent() != parent) {
+                    parent = node.getParent();
+                    index = dt.indexOf(GenericRow.class.cast(parent.getData())) + 1;
+                }
+                dt.add(index++, (GenericRow) node.getData());
+                nodeList.addAll(node.getChildren());
+
+                size--;
+            }
+            size = nodeList.size();
+        }
+        return dt;
     }
 
     private static String obtainAggregation(String[] headers) {
@@ -262,16 +315,8 @@ public class ReportTableController extends AbstractTableController {
         this.parameterController = parameterController;
     }
 
-    public String formatField(Object o) {
-        if(o != null) {
-            String val = o.toString();
-            if(val.matches("^\\-?\\d+\\.\\d+$")) {
-                return String.valueOf((double)Math.round(Double.valueOf(val)*100)/100);
-            }
-            return val;
-        } else {
-            return "";
-        }
+    public void setExportController(ExportController exportController) {
+        this.exportController = exportController;
     }
 
     private class TreeNodeContainer {

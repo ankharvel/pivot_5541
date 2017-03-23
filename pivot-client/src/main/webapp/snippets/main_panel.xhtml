@@ -19,8 +19,7 @@
         <ui:include src="load_file.xhtml"/>
     </h:panelGroup>
 
-    <h:panelGrid rendered="#{menuController.uploadDBEnable or menuController.relationEnable
-        or menuController.exportEnable}">
+    <h:panelGrid rendered="#{menuController.uploadDBEnable or menuController.relationEnable}">
         <p:spacer height="50"/>
         <h:graphicImage url="./images/underconstruction.png" styleClass="pt-courtesy"/>
         <h:outputText value="#{msg.ack_digitalart}" styleClass="pt-courtesy"/>
@@ -56,5 +55,11 @@
         <p:spacer width="5"/>
         <ui:include src="report_view.xhtml"/>
     </h:panelGroup>
+
+    <h:panelGroup rendered="#{menuController.exportEnable}">
+        <p:spacer width="5"/>
+        <ui:include src="export_view.xhtml"/>
+    </h:panelGroup>
+
 
 </ui:composition>
