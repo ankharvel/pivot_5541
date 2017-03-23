@@ -1,6 +1,7 @@
 package net.sweng.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ public class ReportParameters implements Serializable {
     private List<ColumnDetail> reportRows;
     private List<ColumnDetail> reportColumns;
     private List<ColumnDetail> reportFilter;
+    private List<String> filterValues;
     private ColumnDetail field;
     private String fileName;
 
@@ -61,5 +63,13 @@ public class ReportParameters implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public List<String> getFilterValues() {
+        return filterValues;
+    }
+
+    public void setFilterValues(List<String> filterValues) {
+        this.filterValues = filterValues;
     }
 }

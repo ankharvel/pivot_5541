@@ -209,6 +209,8 @@ body {
 
 .pt-label-option {
     font-size:0.9em;
+    color: black;
+    padding: 0.5em;
 }
 
 .pt-ext-button {

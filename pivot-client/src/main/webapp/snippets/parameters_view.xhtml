@@ -57,7 +57,7 @@
             <p:spacer width="10"/>
             <p:fieldset id="dragFiltersArea" legend="#{msg.header_filter}">
                 <p:outputPanel id="dropFiltersArea">
-                    <h:outputText value="#{msg.adv_comming}" rendered="#{empty parameterReportController.reportFilters}" style="color: darkgrey"/>
+                    <h:outputText value="#{msg.adv_drag}" rendered="#{empty parameterReportController.reportFilters}" style="color: darkgrey"/>
 
                     <p:dataGrid var="selectableColumn" value="#{parameterReportController.reportFilters}"
                                 columns="1" rendered="#{not empty parameterReportController.reportFilters}">
@@ -119,7 +119,7 @@
             <p:ajax listener="#{parameterReportController.onSourceToColumn}" update="dropSourceArea dropColumnsArea" />
         </p:droppable>
 
-        <p:droppable disabled="true" for="dragFiltersArea" tolerance="pointer" activeStyleClass="ui-state-highlight" datasource="dropSourceArea" onDrop="handleDrop">
+        <p:droppable for="dragFiltersArea" tolerance="pointer" activeStyleClass="ui-state-highlight" datasource="dropSourceArea" onDrop="handleDrop">
             <p:ajax listener="#{parameterReportController.onSourceToFilter}" update="dropSourceArea dropFiltersArea" />
         </p:droppable>
 

@@ -15,6 +15,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static net.sweng.config.DBConfig.getSessionIdPrefix;
 
@@ -83,27 +84,39 @@ public class H2PivotDao implements PivotDao {
         try {
             createTableFromFile(sourcePath);
             String[] headers = queryHelper.getHeaders(parameters);
-            List<GenericRow> data = jdbcTemplate.query(
-                    queryHelper.buildQuery(parameters), new GenericRowMapper(Arrays.asList(headers)));
-            TableData td = new TableData(headers, data);
+            TableData td = new TableData(headers);
+            List<Object> args = new ArrayList<>();
             if(!parameters.getReportColumns().isEmpty()) {
-                appendPivotColumns(parameters, td);
+                appendColumnValues(td, parameters.getReportColumns(), parameters.getFileName());
             }
+            if(!parameters.getReportFilter().isEmpty()) {
+                appendColumnValues(td, parameters.getReportFilter(), parameters.getFileName());
+                if(parameters.getFilterValues() != null && !parameters.getFilterValues().isEmpty()) {
+                    args.addAll(parameters.getFilterValues());
+                } else {
+                    args.addAll(parameters.getReportFilter().stream().map(
+                            filter -> td.getColumnValues(filter.getColumnName()).iterator().next()).collect(Collectors.toList()));
+                }
+            }
+            List<GenericRow> data = jdbcTemplate.query(
+                    queryHelper.buildQuery(parameters), new GenericRowMapper(Arrays.asList(headers)), args.toArray());
+            td.setData(data);
+
             return td;
         } catch (Exception ex) {
             throw new InvalidDataTypeException(ex.getCause().getMessage(), ex);
         }
     }
 
-    private void appendPivotColumns(ReportParameters parameters, TableData td) {
-        for(ColumnDetail detail: parameters.getReportColumns()) {
+    private void appendColumnValues(TableData td, List<ColumnDetail> detailList, String fileName) {
+        for(ColumnDetail detail: detailList) {
             List<String> cols = jdbcTemplate.queryForList(
                     MessageFormat.format(
                             SELECT_COL_VALUES,
-                            detail.getColumnName(), getTableName(parameters.getFileName())),
+                            detail.getColumnName(), getTableName(fileName)),
                     String.class
             );
-            td.putPivotColumns(detail.getColumnName(), cols);
+            td.putColumnValues(detail.getColumnName(), cols);
         }
     }
 

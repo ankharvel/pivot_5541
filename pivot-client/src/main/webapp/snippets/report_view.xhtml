@@ -21,6 +21,14 @@
                                  actionListener="#{mainPanelController.clearParameters}"
                                  ajax="true" oncomplete="reloadConfigurePanel();"/>
             </h:panelGrid>
+            <h:panelGrid columns="3" width="300" rendered="#{not empty parameterReportController.selectedParameters.reportFilter}">
+                <h:outputText value="#{parameterReportController.formattedFilter}" styleClass="pt-label-option"/>
+                <p:spacer width="10"/>
+                <p:selectOneMenu style="width: 150px;" onchange="submit();" valueChangeListener="#{reportTableController.fillRecords}"
+                                 value="#{reportTableController.selectedFilterValue}">
+                    <f:selectItems value="#{reportTableController.filterValues}"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
         </h:form>
         <h:form>
             <p:treeTable value="#{reportTableController.rootNode}" var="message" resizableColumns="true">

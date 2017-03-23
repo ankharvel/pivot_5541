@@ -25,6 +25,7 @@ public class H2QueryHelper implements QueryHelper {
         appendColumns(sql, parameters.getReportColumns(), COL_SUFFIX);
         appendAggregation(sql, parameters.getAggregationType(), parameters.getField());
         sql.append(" FROM ").append(getTableName(parameters.getFileName()));
+        appendWhere(sql, parameters.getReportFilter());
         appendGroupBy(sql, parameters.getReportRows(), parameters.getReportColumns());
         appendOrder(sql, parameters.getReportRows());
         return sql.toString();
@@ -87,6 +88,17 @@ public class H2QueryHelper implements QueryHelper {
                 break;
         }
         sql.append("AS ").append(type.name()).append(AGG_SUFFIX);
+    }
+
+    private void appendWhere(StringBuilder sql, List<ColumnDetail> rows) {
+        if(!rows.isEmpty()) {
+            sql.append(" WHERE ");
+            for(ColumnDetail detail: rows) {
+                sql.append(detail.getColumnName()).append(" = ").append("?");
+                sql.append(" AND ");
+            }
+            sql.delete(sql.lastIndexOf("AND "), sql.length());
+        }
     }
 
     private void appendGroupBy(StringBuilder sql, List<ColumnDetail> rows, List<ColumnDetail> columns) {

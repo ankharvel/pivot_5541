@@ -12,28 +12,37 @@ public class TableData implements Serializable {
 
     private String[] columnNames;
     private List<GenericRow> data;
-    private Map<String, List<String>> pivotColumns;
+    private Map<String, List<String>> columnValues;
 
     public TableData(String[] columnNames, List<GenericRow> data) {
-        this.pivotColumns = new HashMap<>();
+        this.columnValues = new HashMap<>();
         this.columnNames = columnNames;
         this.data = data;
+    }
+
+    public TableData(String[] columnNames) {
+        this.columnNames = columnNames;
+        this.columnValues = new HashMap<>();
     }
 
     public String[] getColumnNames() {
         return columnNames;
     }
 
+    public void setData(List<GenericRow> data) {
+        this.data = data;
+    }
+
     public List<GenericRow> getData() {
         return data;
     }
 
-    public List<String> getPivotColumnValues(String columnName) {
-        return pivotColumns.get(columnName);
+    public List<String> getColumnValues(String columnName) {
+        return columnValues.get(columnName);
     }
 
-    public void putPivotColumns(String column, List<String> values) {
-        pivotColumns.put(column, values);
+    public void putColumnValues(String column, List<String> values) {
+        columnValues.put(column, values);
     }
 
 }

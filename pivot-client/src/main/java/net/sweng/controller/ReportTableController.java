@@ -4,6 +4,7 @@ import net.sweng.domain.GenericRow;
 import net.sweng.domain.ReportParameters;
 import net.sweng.domain.TableData;
 import net.sweng.domain.exceptions.InvalidDataTypeException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -39,6 +40,9 @@ public class ReportTableController extends AbstractTableController {
     private String lblTotal;
     private String dynamicWidth;
 
+    private List<String> filterValues;
+    private String selectedFilterValue;
+
     @Override
     public void initialize() {
         createDynamicColumns();
@@ -49,10 +53,22 @@ public class ReportTableController extends AbstractTableController {
     public void fillRecords(FacesEvent event) {
         try {
             if(event instanceof ValueChangeEvent)  {
-                parameterController.setSelectedParameters(((ValueChangeEvent) event).getNewValue());
+                String value = ((ValueChangeEvent) event).getNewValue().toString();
+                if(value.contains(ReportParameters.class.getSimpleName())) {
+                    parameterController.setSelectedParameters(((ValueChangeEvent) event).getNewValue());
+                    selectedFilterValue = "";
+                } else {
+                    selectedFilterValue = value;
+                }
             }
             ReportParameters parameters = parameterController.generateParameters();
+            if(StringUtils.isNotBlank(selectedFilterValue)) {
+                parameters.setFilterValues(Collections.singletonList(selectedFilterValue));
+            }
             TableData data = pivotController.generateReportFromCSV(parameters);
+            if(!parameters.getReportFilter().isEmpty()) {
+                filterValues = data.getColumnValues(parameters.getReportFilter().iterator().next().getColumnName());
+            }
             List<String> headers = obtainHeaders(data);
             setColumnKeys(headers.toArray(new String[headers.size()]));
             updateDynamicWidth(headers.size());
@@ -69,6 +85,7 @@ public class ReportTableController extends AbstractTableController {
 
     public void addParametersAndFillRecords(FacesEvent event) {
         parameterController.addParameters();
+        selectedFilterValue = "";
         fillRecords(event);
     }
 
@@ -175,10 +192,10 @@ public class ReportTableController extends AbstractTableController {
             headers.add(aggLbl);
         } else if(obtainRows(data.getColumnNames()).isEmpty() && !rawColumns.isEmpty()) {
             headers.add(LB_EMPTY);
-            rawColumns.stream().forEach(lbl -> headers.addAll(data.getPivotColumnValues(lbl)));
+            rawColumns.stream().forEach(lbl -> headers.addAll(data.getColumnValues(lbl)));
         } else {
             headers.addAll(obtainRows(data.getColumnNames()));
-            rawColumns.stream().forEach(lbl -> headers.addAll(data.getPivotColumnValues(lbl)));
+            rawColumns.stream().forEach(lbl -> headers.addAll(data.getColumnValues(lbl)));
         }
 
         return headers;
@@ -225,6 +242,18 @@ public class ReportTableController extends AbstractTableController {
 
     public void setRootNode(TreeNode rootNode) {
         this.rootNode = rootNode;
+    }
+
+    public List<String> getFilterValues() {
+        return filterValues;
+    }
+
+    public String getSelectedFilterValue() {
+        return selectedFilterValue;
+    }
+
+    public void setSelectedFilterValue(String selectedFilterValue) {
+        this.selectedFilterValue = selectedFilterValue;
     }
 
     public void setParameterController(ParameterReportController parameterController) {

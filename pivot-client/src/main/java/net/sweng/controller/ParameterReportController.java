@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
+import java.text.MessageFormat;
 import java.util.*;
 
 import static net.sweng.config.HttpSessionHandler.getSessionAttribute;
@@ -140,6 +141,8 @@ public class ParameterReportController extends AbstractView {
     }
 
     public void onSourceToFilter(DragDropEvent ddEvent) {
+        columnSource.addAll(reportFilters);
+        reportFilters.clear();
         GenericRow dragElement = ((GenericRow) ddEvent.getData());
         reportFilters.add(dragElement);
         columnSource.remove(dragElement);
@@ -183,6 +186,11 @@ public class ParameterReportController extends AbstractView {
     public void clearCurrentFile() {
         currentFileName = "";
         aggregationName = "";
+    }
+
+    public String getFormattedFilter() {
+        String name = selectedParameters.getReportFilter().iterator().next().getColumnName();
+        return name.charAt(0) + name.toLowerCase().substring(1) + ": ";
     }
 
     private class GenericRowComparator implements Comparator<GenericRow> {
@@ -256,7 +264,7 @@ public class ParameterReportController extends AbstractView {
             this.selectedParameters = parametersList.stream().filter(
                     p -> p.toString().equalsIgnoreCase(o.toString())).findFirst().get();
         } catch (Exception ex) {
-            addErrorMessage("Pailas");
+            addErrorMessage(MessageFormat.format(bundle.getString("err_casting_error"), ReportParameters.class.getSimpleName()));
         }
     }
 
