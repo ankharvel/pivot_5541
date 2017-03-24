@@ -1,5 +1,6 @@
 package net.sweng.controller;
 
+import net.sweng.domain.FilteredData;
 import net.sweng.domain.GenericRow;
 import net.sweng.domain.ReportParameters;
 import net.sweng.domain.TableData;
@@ -81,7 +82,7 @@ public class ReportTableController extends AbstractTableController {
             setRootNode(obtainTree(data, headers));
             reportEnable = true;
             reportGenerated = parameters.getFileName();
-            createExportView(headers);
+            createExportView(headers, !parameters.getReportFilter().isEmpty());
         } catch (InvalidDataTypeException ex) {
             addErrorMessage(ex.getMessage());
         } catch (Exception ex) {
@@ -215,12 +216,31 @@ public class ReportTableController extends AbstractTableController {
         return headers;
     }
 
-    private void createExportView(List<String> headers) {
+    private void createExportView(List<String> headers, boolean filtersEnable) {
         List<GenericRow> plainData = obtainPlainData(rootNode);
         TableData td = new TableData(headers.toArray(new String[headers.size()]), plainData);
         exportController.setTableData(td);
         exportController.fillRecords(null);
         exportController.setReportTableName(reportGenerated);
+        exportController.setFilteredDataList(new ArrayList<>());
+
+        if(filtersEnable) {
+            try {
+                Map<String, TableData> dataMap = pivotController.generateReportWithAllFilters(parameterController.getSelectedParameters(), filterValues);
+
+                List<FilteredData> filterDataList = new ArrayList<>();
+                for(Map.Entry<String, TableData> entry: dataMap.entrySet()) {
+                    TreeNode node = obtainTree(entry.getValue(), headers);
+                    filterDataList.add(new FilteredData(obtainPlainData(node), entry.getKey()));
+                }
+                Collections.sort(filterDataList, (o1, o2) -> o1.getFilterName().compareToIgnoreCase(o2.getFilterName()));
+                exportController.setFilteredDataList(filterDataList);
+            } catch (InvalidDataTypeException ex) {
+                addErrorMessage(ex.getMessage());
+            } catch (Exception ex) {
+                Logger.getGlobal().log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        }
     }
 
     private List<GenericRow> obtainPlainData(TreeNode root) {

@@ -108,6 +108,31 @@ public class H2PivotDao implements PivotDao {
         }
     }
 
+    @Override
+    public Map<String, TableData> getReportFromCsvWithAllFilters(ReportParameters parameters, List<String> filterValues) throws InvalidDataTypeException {
+        Map<String, TableData> dataMap = new HashMap<>();
+        try {
+            String[] headers = queryHelper.getHeaders(parameters);
+
+            for(String filterValue: filterValues) {
+                TableData td = new TableData(headers);
+                List<Object> args = new ArrayList<>();
+                if(!parameters.getReportColumns().isEmpty()) {
+                    appendColumnValues(td, parameters.getReportColumns(), parameters.getFileName());
+                }
+                args.add(filterValue);
+                List<GenericRow> data = jdbcTemplate.query(
+                        queryHelper.buildQuery(parameters), new GenericRowMapper(Arrays.asList(headers)), args.toArray());
+                td.setData(data);
+                dataMap.put(filterValue, td);
+            }
+
+            return dataMap;
+        } catch (Exception ex) {
+            throw new InvalidDataTypeException(ex.getCause().getMessage(), ex);
+        }
+    }
+
     private void appendColumnValues(TableData td, List<ColumnDetail> detailList, String fileName) {
         for(ColumnDetail detail: detailList) {
             List<String> cols = jdbcTemplate.queryForList(

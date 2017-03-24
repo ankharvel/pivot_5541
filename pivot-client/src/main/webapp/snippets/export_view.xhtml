@@ -6,8 +6,8 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
         >
 
-    <h:panelGrid rendered="#{reportTableController.reportEnable}" style="width:#{reportTableController.dynamicWidth}">
-        <h:form id="expMenu">
+    <h:panelGrid rendered="#{reportTableController.reportEnable}">
+        <h:form id="#{exportController.exportMenuId}">
             <h:panelGrid columns="3" style="text-align: left">
                 <h:outputText value="#{parameterReportController.obtainLabel(parameterReportController.selectedParameters)}"
                               styleClass="pt-small-header"/>
@@ -25,7 +25,7 @@
                     <p:inputText value="#{exportController.reportFileName}"/>
                 </h:panelGrid>
                 <p:spacer width="50"/>
-                <h:panelGroup>
+                <h:panelGroup rendered="#{empty exportController.filteredDataList}">
                     <p:commandLink ajax="false">
                         <p:graphicImage value="./images/pdf-icon.png"/>
                         <f:setPropertyActionListener value="false" target="#{exportController.customExporter}" />
@@ -40,22 +40,64 @@
                                      datasetPadding="4"/>
                     </p:commandLink>
                 </h:panelGroup>
+                <h:panelGroup rendered="#{not empty exportController.filteredDataList}">
+                    <p:commandLink ajax="false">
+                        <p:graphicImage value="./images/pdf-icon.png"/>
+                        <f:setPropertyActionListener value="false" target="#{exportController.customExporter}" />
+                        <pe:exporter type="pdf" target="#{exportController.obtainInnerTableReferences()}"
+                                     fileName="#{exportController.reportFileName}"
+                                     datasetPadding="1"/>
+                    </p:commandLink>
+                    <p:spacer width="20"/>
+                    <p:commandLink ajax="false">
+                        <p:graphicImage value="./images/excel-xls-icon.png"/>
+                        <f:setPropertyActionListener value="false" target="#{exportController.customExporter}" />
+                        <pe:exporter type="xlsx" target="#{exportController.obtainInnerTableReferences()}"
+                                     fileName="#{exportController.reportFileName}"
+                                     datasetPadding="1"/>
+                    </p:commandLink>
+                </h:panelGroup>
             </h:panelGrid>
 
             <p:spacer height="10"/>
-            <p:dataTable id="reportTbl" var="message" value="#{exportController.registers}" rows="10"
-                         draggableColumns="true" paginator="true" scrollable="true">
-                <f:facet name="header">
-                    <h:outputText value="#{exportController.reportTableName}" rendered="false"/>
-                </f:facet>
-                <p:columns value="#{exportController.columns}" var="column" columnIndexVar="colIndex">
+
+            <h:panelGrid columns="1" style="width:#{reportTableController.dynamicWidth}">
+                <p:dataTable id="reportTbl" var="message" value="#{exportController.registers}" rows="12"
+                             draggableColumns="true" paginator="#{exportController.paginationRequired()}" scrollable="true"
+                             rendered="#{empty exportController.filteredDataList}">
                     <f:facet name="header">
-                        <h:outputText value="#{column.header}"/>
+                        <h:outputText value="#{exportController.reportTableName}" rendered="false"/>
                     </f:facet>
-                    <h:outputText value="#{message[column.property]}"/>
-                </p:columns>
-            </p:dataTable>
+                    <p:columns value="#{exportController.columns}" var="column" columnIndexVar="colIndex">
+                        <f:facet name="header">
+                            <h:outputText value="#{column.header}"/>
+                        </f:facet>
+                        <h:outputText value="#{message[column.property]}"/>
+                    </p:columns>
+                </p:dataTable>
+
+                <p:spacer height="20"/>
+
+                <ui:repeat id="#{exportController.exportLoopId}" var="subData" value="#{exportController.filteredDataList}">
+                    <p:dataTable id="#{exportController.exportInnerTableId}" var="message" value="#{exportController.validate(subData.rows)}"
+                                 rendered="#{not empty exportController.filteredDataList}">
+                        <f:facet name="header">
+                            <h:outputText value="#{exportController.obtainSubReportName(subData.filterName)}"/>
+                        </f:facet>
+
+                        <p:columns value="#{exportController.columns}" var="column" columnIndexVar="colIndex">
+                            <f:facet name="header">
+                                <h:outputText value="#{column.header}"/>
+                            </f:facet>
+                            <h:outputText value="#{message[column.property]}"/>
+                        </p:columns>
+                    </p:dataTable>
+                    <p:spacer height="10"/>
+                </ui:repeat>
+
+            </h:panelGrid>
 
         </h:form>
     </h:panelGrid>
+
 </ui:composition>

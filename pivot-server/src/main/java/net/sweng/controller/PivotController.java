@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +43,10 @@ public class PivotController {
 
     public TableData generateReportFromCSV(ReportParameters parameters) throws InvalidDataTypeException {
         return pivotDao.getReportFromCsv(parameters, getSourcePath(parameters.getFileName()));
+    }
+
+    public Map<String, TableData> generateReportWithAllFilters(ReportParameters parameters, List<String> filterValues) throws InvalidDataTypeException {
+        return pivotDao.getReportFromCsvWithAllFilters(parameters, filterValues);
     }
 
     private String getSourcePath(String fileName) {

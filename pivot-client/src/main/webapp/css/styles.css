@@ -245,5 +245,6 @@ body {
 .ui-paginator.ui-paginator-top {
     border-bottom: 0 none;
     visibility: collapse;
+    height: 0px;
 }
 
