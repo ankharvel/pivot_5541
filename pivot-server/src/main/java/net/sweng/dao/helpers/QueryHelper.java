@@ -1,4 +1,4 @@
-package net.sweng.dao;
+package net.sweng.dao.helpers;
 
 import net.sweng.domain.ReportParameters;
 

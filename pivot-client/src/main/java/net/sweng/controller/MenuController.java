@@ -40,7 +40,6 @@ public class MenuController extends AbstractView {
         menuTitle = bundle.getString("subtitle_connect_db");
         iconClass = "fa fa-database";
         enableView(CONNECT_DATABASE);
-        addMessage(bundle.getString("info_not_available"), bundle.getString("info_under_construction"), FacesMessage.SEVERITY_ERROR);
     }
 
     public void setSchema(ActionEvent event) {

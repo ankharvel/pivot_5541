@@ -1,20 +1,20 @@
-package net.sweng.dao;
+package net.sweng.dao.helpers;
 
 import net.sweng.domain.AggregationType;
 import net.sweng.domain.ColumnDetail;
 import net.sweng.domain.ReportParameters;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.sweng.config.DBConfig.getSessionIdPrefix;
-
 /**
- * Date on 2/25/17.
+ * Created on 3/27/17.
  */
 @Service
-public class H2QueryHelper implements QueryHelper {
+@Scope(value = "prototype")
+public abstract class AbstractQueryHelper implements QueryHelper {
 
     private static final String AGG_SUFFIX = "_agg";
     private static final String COL_SUFFIX = "_col";
@@ -133,18 +133,9 @@ public class H2QueryHelper implements QueryHelper {
         }
     }
 
-    private String getCastedColumn(ColumnDetail column) {
-        switch (column.getDataType()) {
-            case STRING:
-                return column.getColumnName();
-            case NUMERIC:
-                return "CAST(" + column.getColumnName() + " AS DOUBLE)";
-        }
-        return column.getColumnName();
-    }
+    protected abstract String getCastedColumn(ColumnDetail column);
 
-    public static String getTableName(String fileName) {
-        return (fileName.substring(0, fileName.indexOf(".")) + "_" + getSessionIdPrefix()).toUpperCase();
-    }
+    protected abstract String getTableName(String fileName);
+
 
 }

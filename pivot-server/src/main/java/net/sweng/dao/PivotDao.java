@@ -12,11 +12,30 @@ import java.util.Map;
  */
 public interface PivotDao {
 
-    TableData getRecordsFromCsv(String sourcePath);
+    /**
+     * Brings the raw data from a table or file
+     * @param source sourcePath or table name
+     */
+    TableData getRecords(String source);
 
-    String[] getHeadersFromCsv(String sourcePath);
+    /**
+     * Retrieve the table headers
+     * @param source sourcePath or table name
+     */
+    List<String> getHeaders(String source);
 
-    TableData getReportFromCsv(ReportParameters parameters, String sourcePath) throws InvalidDataTypeException;
+    TableData getReport(ReportParameters parameters, String sourcePath) throws InvalidDataTypeException;
 
-    Map<String,TableData> getReportFromCsvWithAllFilters(ReportParameters parameters, List<String> filterValues) throws InvalidDataTypeException;
+    Map<String,TableData> getReportWithFilters(ReportParameters parameters, List<String> filterValues) throws InvalidDataTypeException;
+
+    /**
+     * Retrieve available table names
+     */
+    List<String> getTableNames();
+
+    /**
+     * Close database pool connection
+     */
+    void closePool();
+
 }

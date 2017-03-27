@@ -108,7 +108,7 @@
                              disabled="#{empty parameterReportController.aggregationName or
                                 empty parameterReportController.reportField}"
                              oncomplete="reloadReportPanel();" styleClass="pt-ext-button"
-                             rendered="#{not empty parameterReportController.currentFileName}"/>
+                             rendered="#{not empty mainPanelController.selectedSource.sourceName}"/>
         </h:panelGrid>
 
         <p:droppable for="dragRowsArea" tolerance="pointer" activeStyleClass="ui-state-highlight" datasource="dropSourceArea" onDrop="handleDrop">

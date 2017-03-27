@@ -1,5 +1,8 @@
 package net.sweng.config;
 
+import net.sweng.controller.PivotController;
+import org.springframework.web.context.support.XmlWebApplicationContext;
+
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -23,11 +26,17 @@ public class HttpSessionHandler implements HttpSessionListener {
         ev.getSession().setAttribute(FILE_AVAILABLE, false);
         ev.getSession().setAttribute(SCHEMA_AVAILABLE, false);
         ev.getSession().setAttribute(TEMP_FOLDER_PATH, ctx.getRealPath("/WEB-INF/tmp/" + seq.get()));
+        ev.getSession().setMaxInactiveInterval(600);
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent ev) {
-
+        ServletContext ctx = ev.getSession().getServletContext();
+        XmlWebApplicationContext webCtx = (XmlWebApplicationContext) ctx.getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
+        PivotController controller = (PivotController) webCtx.getBean("pivotController");
+        controller.destroySession();
+        ResourceHandler resourceHandler = (ResourceHandler) webCtx.getBean("resourceHandler");
+        resourceHandler.removeSessionFolder((int) ev.getSession().getAttribute(ACTIVE_SESSION_PREFIX));
     }
 
     public static void putSessionAttribute(String key, Object value) {

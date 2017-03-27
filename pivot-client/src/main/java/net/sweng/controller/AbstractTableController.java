@@ -21,14 +21,8 @@ public abstract class AbstractTableController extends AbstractView {
     private List<ColumnModel> columns = new ArrayList<>();
     private String[] columnKeys = new String[0];
 
-    @Autowired
-    protected PivotController pivotController;
-
     @PostConstruct
     private void init() {
-        FacesContextUtils
-                .getRequiredWebApplicationContext(FacesContext.getCurrentInstance())
-                .getAutowireCapableBeanFactory().autowireBean(this);
         initialize();
     }
 

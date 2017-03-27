@@ -16,7 +16,7 @@ body {
     background-color: #2F4E6F;
 }
 
-#topPanel .ui-grid {
+#topPanel .ui-grid, #bottomPanel .ui-grid {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: bolder;
     background: rgba(0,0,0,0);
@@ -67,14 +67,12 @@ body {
 }
 
 .ui-button-text-icon-left .ui-button-text {
-    padding: .35em 1em .2em 2.1em;
+    padding: .35em 1em .2em 2em;
 }
 
-#repMenu .ui-button-text-icon-left .ui-button-text {
-    font-size: 0.9em;
-}
-
-#expMenu .ui-button-text-icon-left .ui-button-text {
+#repMenu .ui-button-text-icon-left .ui-button-text,
+#expMenu .ui-button-text-icon-left .ui-button-text,
+#dbForm .ui-button-text-icon-left .ui-button-text {
     font-size: 0.9em;
 }
 
@@ -212,13 +210,12 @@ body {
 }
 
 .pt-label-option {
-    font-size:0.9em;
+    font-family: Arial, sans-serif;
     color: black;
     padding: 0.5em;
 }
 
 .pt-ext-button {
-    width: 120px;
     text-align: left;
 }
 

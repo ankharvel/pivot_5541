@@ -19,9 +19,9 @@
             <p:spacer height="10"/>
             <h:panelGrid columns="3">
                 <h:panelGrid columns="2" style="text-align: left">
-                    <h:outputText value="Table name: " styleClass="pt-label-option"/>
+                    <h:outputText value="#{msg.lbl_tablename}" styleClass="pt-label-option"/>
                     <p:inputText value="#{exportController.reportTableName}"/>
-                    <h:outputText value="File name: " styleClass="pt-label-option"/>
+                    <h:outputText value="#{msg.lbl_filename}" styleClass="pt-label-option"/>
                     <p:inputText value="#{exportController.reportFileName}"/>
                 </h:panelGrid>
                 <p:spacer width="50"/>

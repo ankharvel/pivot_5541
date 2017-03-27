@@ -35,6 +35,7 @@ public class ParameterReportController extends AbstractView {
     private String currentFileName;
     private String aggregationName;
     private String customStyle;
+    private boolean fromFile;
     private int editIndex = -1;
 
     @PostConstruct
@@ -43,16 +44,22 @@ public class ParameterReportController extends AbstractView {
         parametersList = new LinkedList<>();
     }
 
-    public void initialize(String fileName) {
-        if(StringUtils.isBlank(fileName)) {
+    public void initialize(SourceDetail sourceDetail) {
+        if(StringUtils.isBlank(sourceDetail.getSourceName())) {
             enableDragMenu = false;
             currentFileName = null;
             return;
         }
-        currentFileName = fileName;
-        TableCatalogue catalogue = getSessionAttribute(TABLE_SCHEMA_CATALOGUE, TableCatalogue.class);
+        currentFileName = sourceDetail.getSourceName();
 
-        this.columnSource = new ArrayList<>(catalogue.get(fileName));
+        if(sourceDetail.getSourceType().equals(SourceDetail.SourceType.DATABASE)) {
+            this.columnSource = convertToGenericRow(pivotController.readTableHeaders(currentFileName));
+            this.fromFile = false;
+        } else {
+            TableCatalogue catalogue = getSessionAttribute(TABLE_SCHEMA_CATALOGUE, TableCatalogue.class);
+            this.columnSource = new ArrayList<>(catalogue.get(currentFileName));
+            this.fromFile = true;
+        }
         this.reportRows = new LinkedList<>();
         this.reportColumns = new LinkedList<>();
         this.reportFilters = new LinkedList<>();
@@ -61,6 +68,17 @@ public class ParameterReportController extends AbstractView {
 
         customStyle = columnSource.size() > MAX_RECORDS ? bundle.getString("style_scroll") : bundle.getString("style_default");
         enableDragMenu = true;
+    }
+
+    private List<GenericRow> convertToGenericRow(List<String> headers) {
+        List<GenericRow> records = new ArrayList<>();
+        for(String h: headers) {
+            GenericRow record = new GenericRow();
+            record.put(bundle.getString("header_column"), h);
+            record.put(bundle.getString("header_type"), DataType.STRING);
+            records.add(record);
+        }
+        return records;
     }
 
     public void removeRow(GenericRow detail) {
@@ -159,19 +177,28 @@ public class ParameterReportController extends AbstractView {
     public void onMenuChange(ValueChangeEvent event) {
         editIndex = -1;
         aggregationName = "";
-        String value = (String) event.getNewValue();
+        SourceDetail value = (SourceDetail) event.getNewValue();
         initialize(value);
     }
 
     public void loadParameters() {
         currentFileName = selectedParameters.getFileName();
-        initialize(currentFileName);
+        initialize(new SourceDetail(currentFileName, obtainType(currentFileName)));
         updateColumnParameters(selectedParameters.getReportRows(), reportRows);
         updateColumnParameters(selectedParameters.getReportColumns(), reportColumns);
         updateColumnParameters(selectedParameters.getReportFilter(), reportFilters);
         updateColumnParameters(Collections.singletonList(selectedParameters.getField()), reportField);
         aggregationName = selectedParameters.getAggregationType().name();
         editIndex = parametersList.indexOf(selectedParameters);
+    }
+
+    private SourceDetail.SourceType obtainType(String currentFileName) {
+        for(SourceDetail.SourceType type: SourceDetail.SourceType.values()) {
+            if(currentFileName.toLowerCase().endsWith("." + type.name().toLowerCase())) {
+                return type;
+            }
+        }
+        return SourceDetail.SourceType.DATABASE;
     }
 
     private void updateColumnParameters(List<ColumnDetail> source, List<GenericRow> toUpdate) {
@@ -249,6 +276,10 @@ public class ParameterReportController extends AbstractView {
 
     public void setCurrentFileName(String currentFileName) {
         this.currentFileName = currentFileName;
+    }
+
+    public boolean isFromFile() {
+        return fromFile;
     }
 
     public ReportParameters getSelectedParameters() {

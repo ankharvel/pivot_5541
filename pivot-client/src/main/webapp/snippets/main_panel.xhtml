@@ -19,7 +19,11 @@
         <ui:include src="load_file.xhtml"/>
     </h:panelGroup>
 
-    <h:panelGrid rendered="#{menuController.uploadDBEnable or menuController.relationEnable}">
+    <h:panelGroup rendered="#{menuController.uploadDBEnable}">
+        <ui:include src="database_view.xhtml"/>
+    </h:panelGroup>
+
+    <h:panelGrid rendered="#{menuController.relationEnable}">
         <p:spacer height="50"/>
         <h:graphicImage url="./images/underconstruction.png" styleClass="pt-courtesy"/>
         <h:outputText value="#{msg.ack_digitalart}" styleClass="pt-courtesy"/>
@@ -28,24 +32,23 @@
     <h:panelGroup rendered="#{menuController.schemaEnable}">
         <p:spacer height="5"/>
         <h:form>
-            <h:panelGrid columns="2" cellpadding="5" width="450px">
-                <h:outputText for="cmb_source" value="#{msg.option_select_source}" styleClass="pt-label-option"/>
-                <p:selectOneMenu id="cmb_source" onchange="submit();" style="width:180px"
+            <h:panelGrid columns="2" cellpadding="5" width="500px">
+                <h:outputLabel for="cmb_source" value="#{msg.option_select_source}" styleClass="pt-label-option"/>
+                <p:selectOneMenu id="cmb_source" onchange="submit();" style="width:180px" converter="sourceDetailConverter"
                                  valueChangeListener="#{mainPanelController.onMenuChange}"
-                                 value="#{parameterReportController.currentFileName}">
-                    <f:selectItem itemLabel=" " itemValue="" />
-                    <f:selectItems value="#{uploadedTableController.uploadedFiles}"/>
+                                 value="#{mainPanelController.selectedSource}">
+                    <f:selectItems value="#{mainPanelController.obtainCurrentSources()}"/>
                 </p:selectOneMenu>
             </h:panelGrid>
         </h:form>
         <p:spacer height="5"/>
         <p:accordionPanel activeIndex="#{mainPanelController.accordionIndex}"
-                          rendered="#{not empty parameterReportController.currentFileName}">
+                          rendered="#{not empty mainPanelController.selectedSource.sourceName}">
             <p:ajax event="tabChange" listener="#{mainPanelController.onTabChange}"/>
             <p:tab title="Report parameters">
                 <ui:include src="parameters_view.xhtml"/>
             </p:tab>
-            <p:tab title="Configure column types">
+            <p:tab title="Configure column types" rendered="#{mainPanelController.columnTypeEnabled}">
                 <ui:include src="column_type_view.xhtml"/>
             </p:tab>
         </p:accordionPanel>

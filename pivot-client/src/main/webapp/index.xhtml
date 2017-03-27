@@ -16,8 +16,8 @@
         <ui:include src="snippets/main_panel.xhtml"/>
     </ui:define>
     <ui:define name="south">
-        <h4>
-            <h:outputText value="#{msg.title_season}" styleClass="ui-title"/>
-        </h4>
+        <p:panelGrid columns="1" layout="grid">
+            <h:outputText value="#{msg.title_season}"/>
+        </p:panelGrid>
     </ui:define>
 </ui:composition>

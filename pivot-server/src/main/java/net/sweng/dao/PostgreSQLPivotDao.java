@@ -1,94 +1,71 @@
 package net.sweng.dao;
 
-import net.sweng.config.DBConfig;
 import net.sweng.dao.helpers.QueryHelper;
 import net.sweng.domain.ColumnDetail;
 import net.sweng.domain.GenericRow;
 import net.sweng.domain.ReportParameters;
 import net.sweng.domain.TableData;
 import net.sweng.domain.exceptions.InvalidDataTypeException;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static net.sweng.config.DBConfig.getSessionIdPrefix;
-
 /**
- * Date on 2/13/17.
+ * Created on 3/26/17.
  */
-@Repository("h2PivotDao")
-public class H2PivotDao extends AbstractPivotDao {
+@Repository("postgreSQLPivotDao")
+@Scope("prototype")
+public class PostgreSQLPivotDao extends AbstractPivotDao {
 
-    private static final Logger logger = Logger.getGlobal();
+    private static final String SCHEMA = "public";
 
-    private static final String SELECT_FROM_CSV =
-            "SELECT * FROM CSVREAD(''{0}'')";
+    private static final String TEST_DB =
+            "SELECT current_date";
+
+    private static final String SELECT_HEADERS =
+            "SELECT column_name " +
+            "FROM information_schema.columns " +
+            "WHERE table_schema = ? " +
+            "AND table_name   = ? ";
 
     private static final String SELECT_COL_VALUES =
             "SELECT DISTINCT({0}) FROM {1} ORDER BY 1 ASC";
 
-    private static final String SELECT_COLUMN_NAMES =
-            "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = ''{0}''";
+    private static final String SELECT_TABLE_NAMES =
+            "SELECT tablename FROM pg_catalog.pg_tables " +
+            "WHERE schemaname = ? ";
 
-    private static final String CLEAN_UP =
-            "DROP ALL OBJECTS";
+    public PostgreSQLPivotDao(DataSource dataSource) {
+        super(dataSource);
+        jdbcTemplate.queryForList(TEST_DB);
+    }
 
-    private static final String SHOW_TABLES =
-            "SHOW TABLES";
-
-    private static final String DROP_IF_EXIST =
-            "DROP TABLE IF EXISTS {0} ";
-
-    private static final String CREATE =
-            "CREATE TABLE {0} AS ";
-
-    private static final String TABLE_NAME = "TABLE_NAME";
-    private static final String TABLE_SCHEMA = "TABLE_SCHEMA";
-
-    @Resource(name = "h2QueryHelper")
+    @Resource(name = "postgreSQLQueryHelper")
     private QueryHelper queryHelper;
 
-    public H2PivotDao(@Qualifier("dataSource") DataSource dataSource) {
-        super(dataSource);
-    }
-
-    @PostConstruct
-    private void init() {
-        logger.info("Cleaning up database");
-        jdbcTemplate.update(CLEAN_UP);
-    }
-
+    @Override
     public TableData getRecords(String sourcePath) {
-        String tableName = getTableName(sourcePath);
-        createTableFromFile(sourcePath);
-        List<String> columns = jdbcTemplate.queryForList(MessageFormat.format(SELECT_COLUMN_NAMES, tableName), String.class);
-        String[] columnNames = columns.toArray(new String[columns.size()]);
-
-        List<GenericRow> data = jdbcTemplate.query(
-                MessageFormat.format(SELECT_FROM_CSV, sourcePath), new GenericRowMapper(columns));
-        return new TableData(columnNames, data);
+        return null;
     }
 
     @Override
-    public List<String> getHeaders(String sourcePath) {
-        Set<String> columns = jdbcTemplate.queryForList(MessageFormat.format(SELECT_FROM_CSV + " LIMIT 1", sourcePath)).get(0).keySet();
-        List<String> cols = new ArrayList<>(columns);
-        Collections.sort(cols);
-        return cols;
+    public List<String> getHeaders(String tableName) {
+        List<Object> args = new ArrayList<>();
+        args.add(SCHEMA);
+        args.add(tableName);
+        return jdbcTemplate.queryForList(SELECT_HEADERS, String.class, args.toArray());
     }
 
     @Override
-        public TableData getReport(ReportParameters parameters, String sourcePath) throws InvalidDataTypeException {
+    public TableData getReport(ReportParameters parameters, String tableName) throws InvalidDataTypeException {
         try {
-            createTableFromFile(sourcePath);
             String[] headers = queryHelper.getHeaders(parameters);
             TableData td = new TableData(headers);
             List<Object> args = new ArrayList<>();
@@ -110,6 +87,7 @@ public class H2PivotDao extends AbstractPivotDao {
 
             return td;
         } catch (Exception ex) {
+            Logger.getGlobal().log(Level.SEVERE, "Unable to generate report.", ex);
             throw new InvalidDataTypeException(ex.getCause().getMessage(), ex);
         }
     }
@@ -135,45 +113,26 @@ public class H2PivotDao extends AbstractPivotDao {
 
             return dataMap;
         } catch (Exception ex) {
+            Logger.getGlobal().log(Level.SEVERE, "Unable to generate report.", ex);
             throw new InvalidDataTypeException(ex.getCause().getMessage(), ex);
         }
     }
 
     @Override
     public List<String> getTableNames() {
-        return new ArrayList<>();
+        return jdbcTemplate.queryForList(SELECT_TABLE_NAMES, String.class, "public");
     }
 
-    public void cleanSessionTables() {
-        List<String> headers = Arrays.asList(TABLE_NAME, TABLE_SCHEMA);
-        List<GenericRow> data = jdbcTemplate.query(SHOW_TABLES, new GenericRowMapper(headers));
-        data.stream().filter(d -> String.valueOf(d.get(TABLE_NAME)).endsWith("_" + DBConfig.getSessionIdPrefix())).forEach(row ->
-                jdbcTemplate.update(MessageFormat.format(DROP_IF_EXIST, String.valueOf(row.get(TABLE_NAME))))
-        );
-    }
-
-    private void appendColumnValues(TableData td, List<ColumnDetail> detailList, String fileName) {
+    private void appendColumnValues(TableData td, List<ColumnDetail> detailList, String tableName) {
         for(ColumnDetail detail: detailList) {
             List<String> cols = jdbcTemplate.queryForList(
                     MessageFormat.format(
                             SELECT_COL_VALUES,
-                            detail.getColumnName(), getTableName(fileName)),
+                            detail.getColumnName(), tableName),
                     String.class
             );
             td.putColumnValues(detail.getColumnName(), cols);
         }
-    }
-
-    private void createTableFromFile(String sourcePath) {
-        String tableName = getTableName(sourcePath);
-        jdbcTemplate.update(MessageFormat.format(DROP_IF_EXIST, tableName));
-        jdbcTemplate.update(MessageFormat.format(CREATE, tableName) +
-                MessageFormat.format(SELECT_FROM_CSV, sourcePath));
-    }
-
-    private String getTableName(String sourcePath) {
-        File file = new File(sourcePath);
-        return (file.getName().substring(0, file.getName().indexOf(".")) + "_" + getSessionIdPrefix()).toUpperCase();
     }
 
 }

@@ -3,7 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
     <h:form id="leftMenu">
-        <p:growl id="messages" showDetail="true" escape="false"/>
+        <p:growl id="messages" showDetail="true" escape="false" rendered="#{not menuController.uploadDBEnable}"/>
         <p:menu styleClass="options-menu" toggleable="true">
             <p:submenu label="#{msg.menu_import_data}">
                 <p:menuitem id="uploadFile" value="#{msg.submenu_from_file}" actionListener="#{menuController.uploadFromFile}"
@@ -16,7 +16,7 @@
                 <p:menuitem id="configurePanel" value="#{msg.submenu_schema}" actionListener="#{menuController.setSchema}"
                             icon="fa fa-expand" ajax="false"/>
                 <p:separator/>
-                <p:menuitem value="#{msg.submenu_set_relations}" actionListener="#{menuController.setRelations}"
+                <p:menuitem value="#{msg.submenu_set_relations}" actionListener="#{menuController.setRelations}" rendered="false"
                             icon="fa fa-group" ajax="false"/>
             </p:submenu>
             <p:submenu label="#{msg.menu_report}">

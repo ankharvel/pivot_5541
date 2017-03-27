@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -38,7 +39,18 @@ public class ResourceHandler {
             }
         } catch (Exception ex) {
             logger.severe(ex.getMessage());
-            ex.printStackTrace();
+        }
+    }
+
+    public void removeSessionFolder(int id) {
+        Resource tmpPath = applicationContext.getResource("/WEB-INF/tmp/" + id);
+        try {
+            File tmp = tmpPath.getFile();
+            if(tmp.isDirectory()) {
+                removeDir(tmpPath.getFile());
+            }
+        } catch (IOException ex) {
+            logger.severe(ex.getMessage());
         }
     }
 

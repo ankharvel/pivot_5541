@@ -1,9 +1,6 @@
 package net.sweng.controller;
 
-import net.sweng.domain.DataType;
-import net.sweng.domain.GenericRow;
-import net.sweng.domain.TableCatalogue;
-import net.sweng.domain.TableSchema;
+import net.sweng.domain.*;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.CellEditEvent;
 
@@ -41,12 +38,12 @@ public class ColumnTypeTableController extends AbstractTableController implement
     }
 
     public void fillRecords(FacesEvent event) {
-        String fileName = (String) ((ValueChangeEvent)event).getNewValue();
-        if(StringUtils.isBlank(fileName)) {
+        SourceDetail detail = (SourceDetail) ((ValueChangeEvent)event).getNewValue();
+        if(StringUtils.isBlank(detail.getSourceName()) || detail.getSourceType().equals(SourceDetail.SourceType.DATABASE)) {
             enableView = false;
             return;
         }
-        fillRecords(fileName);
+        fillRecords(detail.getSourceName());
     }
 
     public void fillRecords(String fileName) {
@@ -56,7 +53,7 @@ public class ColumnTypeTableController extends AbstractTableController implement
     }
 
     private List<GenericRow> obtainData(String fileName) {
-        String[] headers = pivotController.readCSVHeaders(fileName);
+        List<String> headers = pivotController.readCSVHeaders(fileName);
         TableSchema tableSchema = new TableSchema();
         List<GenericRow> data = new ArrayList<>();
         for(String h: headers) {

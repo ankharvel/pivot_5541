@@ -12,15 +12,16 @@
         <script type="application/javascript" src="./js/actions.js"></script>
         <link href="./css/styles.css" rel="stylesheet" type="text/css"/>
         <link rel="icon" type="image/png" href="./images/concordia.png" />
+        <meta http-equiv="refresh" content="#{session.getMaxInactiveInterval()}; URL="/>
     </h:head>
     <h:body>
         <p:layout fullPage="true">
 
-            <p:layoutUnit id="topPanel" position="north" size="100" resizable="false" closable="false" collapsible="false">
+            <p:layoutUnit id="topPanel" position="north" size="75" resizable="false" closable="false" collapsible="false">
                 <ui:insert name="top"><h1>_</h1></ui:insert>
             </p:layoutUnit>
 
-            <p:layoutUnit id="bottomPanel" position="south" size="100" resizable="false" closable="true" collapsible="true">
+            <p:layoutUnit id="bottomPanel" position="south" size="50" resizable="false" closable="true" collapsible="true">
                 <ui:insert name="south"><h1>_</h1></ui:insert>
             </p:layoutUnit>
 
@@ -32,7 +33,7 @@
                 <ui:insert name="left"><h1>_</h1></ui:insert>
             </p:layoutUnit>
 
-            <p:layoutUnit position="east" size="150" header="Details" resizable="true" closable="false" collapsible="true" effect="drop">
+            <p:layoutUnit position="east" size="150" header="Details" resizable="true" closable="false" collapsible="true" effect="drop" rendered="false">
                 <ui:insert name="right"><h1>_</h1></ui:insert>
             </p:layoutUnit>
 

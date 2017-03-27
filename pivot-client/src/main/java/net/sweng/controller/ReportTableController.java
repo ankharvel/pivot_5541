@@ -71,7 +71,12 @@ public class ReportTableController extends AbstractTableController {
             } else {
                 parameters.setFilterValues(new ArrayList<>());
             }
-            TableData data = pivotController.generateReportFromCSV(parameters);
+            TableData data;
+            if(parameterController.isFromFile()) {
+                data = pivotController.generateReportFromCSV(parameters);
+            } else {
+                data = pivotController.generateReportFromTable(parameters);
+            }
             if(!parameters.getReportFilter().isEmpty()) {
                 filterValues = data.getColumnValues(parameters.getReportFilter().iterator().next().getColumnName());
             }
@@ -226,7 +231,12 @@ public class ReportTableController extends AbstractTableController {
 
         if(filtersEnable) {
             try {
-                Map<String, TableData> dataMap = pivotController.generateReportWithAllFilters(parameterController.getSelectedParameters(), filterValues);
+                Map<String, TableData> dataMap;
+                if(parameterController.isFromFile()) {
+                    dataMap = pivotController.generateReportWithFiltersFromCSV(parameterController.getSelectedParameters(), filterValues);
+                } else {
+                    dataMap = pivotController.generateReportWithFiltersFromTable(parameterController.getSelectedParameters(), filterValues);
+                }
 
                 List<FilteredData> filterDataList = new ArrayList<>();
                 for(Map.Entry<String, TableData> entry: dataMap.entrySet()) {
