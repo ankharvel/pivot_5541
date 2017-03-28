@@ -79,6 +79,7 @@ public class ReportTableController extends AbstractTableController {
             }
             if(!parameters.getReportFilter().isEmpty()) {
                 filterValues = data.getColumnValues(parameters.getReportFilter().iterator().next().getColumnName());
+                filterValues.remove(null);
             }
             List<String> headers = obtainHeaders(data);
             setColumnKeys(headers.toArray(new String[headers.size()]));
@@ -243,7 +244,7 @@ public class ReportTableController extends AbstractTableController {
                     TreeNode node = obtainTree(entry.getValue(), headers);
                     filterDataList.add(new FilteredData(obtainPlainData(node), entry.getKey()));
                 }
-                Collections.sort(filterDataList, (o1, o2) -> o1.getFilterName().compareToIgnoreCase(o2.getFilterName()));
+                Collections.sort(filterDataList, (o1, o2) -> StringUtils.compare(o1.getFilterName(), o2.getFilterName(), true));
                 exportController.setFilteredDataList(filterDataList);
             } catch (InvalidDataTypeException ex) {
                 addErrorMessage(ex.getMessage());

@@ -220,6 +220,13 @@ public class ParameterReportController extends AbstractView {
         return name.charAt(0) + name.toLowerCase().substring(1) + ": ";
     }
 
+    public String formatDroppableValue(String value) {
+        if (value.length() <= 22) {
+            return value;
+        }
+        return value.substring(0, 20) + "..";
+    }
+
     private class GenericRowComparator implements Comparator<GenericRow> {
         @Override
         public int compare(GenericRow o1, GenericRow o2) {

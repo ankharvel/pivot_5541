@@ -6,6 +6,7 @@
         >
 
     <p:spacer height="10"/>
+
     <h:form id="dbForm">
         <p:remoteCommand name="cleanDBForm" actionListener="#{databaseController.cleanForm}"/>
         <h:panelGrid columns="2" cellpadding="5" width="500px">
@@ -18,54 +19,94 @@
                 <f:selectItems value="#{databaseController.obtainDBTypeValues()}"/>
             </p:selectOneMenu>
         </h:panelGrid>
+
         <p:spacer height="30"/>
-        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" rendered="#{not empty databaseController.dbType}">
-            <h:panelGrid columns="4" cellpadding="3" cellspacing="0"  style="text-align: left">
-                <p:spacer width="50" height="10"/>
-                <h:outputLabel value="#{msg.lbl_host}" for="hostID" styleClass="pt-label-option"/>
-                <h:inputText id="hostID" value="#{databaseController.host}"
-                             required="#{not databaseController.connected and not databaseController.onChangeEvent}"
-                             disabled="#{databaseController.connected}"/>
-                <p:message for="hostID" display="icon"/>
-                <p:spacer width="50" height="10"/>
-                <h:outputLabel value="#{msg.lbl_port}" for="portID" styleClass="pt-label-option"/>
-                <h:inputText id="portID" value="#{databaseController.port}"
-                             required="#{not databaseController.connected and not databaseController.onChangeEvent}"
-                             disabled="#{databaseController.connected}">
-                    <f:validateRegex pattern="^[1-9]+\d*" for="portID"/>
-                </h:inputText>
-                <p:message for="portID" display="icon"/>
-                <p:spacer width="50" height="10"/>
-                <h:outputLabel value="#{msg.lbl_database}" for="databaseID" styleClass="pt-label-option"/>
-                <h:inputText id="databaseID" value="#{databaseController.databaseName}"
-                             required="#{not databaseController.connected and not databaseController.onChangeEvent}"
-                             disabled="#{databaseController.connected}"/>
-                <p:message for="databaseID" display="icon"/>
-                <p:spacer width="50" height="10"/>
-                <h:outputLabel value="#{msg.lbl_user}" for="usernameID" styleClass="pt-label-option"/>
-                <h:inputText id="usernameID" value="#{databaseController.username}"
-                             required="#{not databaseController.connected and not databaseController.onChangeEvent}"
-                             disabled="#{databaseController.connected}"/>
-                <p:message for="usernameID" display="icon"/>
-                <p:spacer width="50" height="10"/>
-                <h:outputLabel value="#{msg.lbl_pass}" for="passID" styleClass="pt-label-option"/>
-                <p:password id="passID" value="#{databaseController.password}"
-                            required="#{not databaseController.connected and not databaseController.onChangeEvent}"
-                            disabled="#{databaseController.connected}"/>
-                <p:message for="passID" display="icon"/>
-            </h:panelGrid>
-            <p:spacer height="10"/>
-            <h:panelGrid columns="3">
-                <p:spacer width="30"/>
-                <p:commandButton id="connectDB" value="#{msg.btn_connect}" icon="fa fa-toggle-on"
-                                 actionListener="#{databaseController.connect}" ajax="false" styleClass="pt-ext-button"
+
+        <h:panelGrid columns="3" cellpadding="0" cellspacing="0" styleClass="pt-db-grid">
+            <h:panelGrid columns="1" cellpadding="0" cellspacing="0" rendered="#{not empty databaseController.dbType}">
+                <h:panelGrid columns="4" cellpadding="3" cellspacing="0"  style="text-align: left">
+                    <p:spacer width="50" height="10"/>
+                    <h:outputLabel value="#{msg.lbl_host}" for="hostID" styleClass="pt-label-option"/>
+                    <h:inputText id="hostID" value="#{databaseController.host}"
+                                 required="#{not databaseController.connected and not databaseController.onChangeEvent}"
                                  disabled="#{databaseController.connected}"/>
-                <p:commandButton id="disconnectDB" value="#{msg.btn_disconnect} " icon="fa fa-toggle-off"
-                                 actionListener="#{databaseController.disconnect}" ajax="false" styleClass="pt-ext-button"
-                                 disabled="#{not databaseController.connected}"/>
+                    <p:message for="hostID" display="icon"/>
+                    <p:spacer width="50" height="10"/>
+                    <h:outputLabel value="#{msg.lbl_port}" for="portID" styleClass="pt-label-option"/>
+                    <h:inputText id="portID" value="#{databaseController.port}"
+                                 required="#{not databaseController.connected and not databaseController.onChangeEvent}"
+                                 disabled="#{databaseController.connected}">
+                        <f:validateRegex pattern="^[1-9]+\d*" for="portID"/>
+                    </h:inputText>
+                    <p:message for="portID" display="icon"/>
+                    <p:spacer width="50" height="10"/>
+                    <h:outputLabel value="#{msg.lbl_database}" for="databaseID" styleClass="pt-label-option"/>
+                    <h:inputText id="databaseID" value="#{databaseController.databaseName}"
+                                 required="#{not databaseController.connected and not databaseController.onChangeEvent}"
+                                 disabled="#{databaseController.connected}"/>
+                    <p:message for="databaseID" display="icon"/>
+                    <p:spacer width="50" height="10"/>
+                    <h:outputLabel value="#{msg.lbl_user}" for="usernameID" styleClass="pt-label-option"/>
+                    <h:inputText id="usernameID" value="#{databaseController.username}"
+                                 required="#{not databaseController.connected and not databaseController.onChangeEvent}"
+                                 disabled="#{databaseController.connected}"/>
+                    <p:message for="usernameID" display="icon"/>
+                    <p:spacer width="50" height="10"/>
+                    <h:outputLabel value="#{msg.lbl_pass}" for="passID" styleClass="pt-label-option"/>
+                    <p:password id="passID" value="#{databaseController.password}"
+                                required="#{not databaseController.connected and not databaseController.onChangeEvent}"
+                                disabled="#{databaseController.connected}"/>
+                    <p:message for="passID" display="icon"/>
+                </h:panelGrid>
+                <p:spacer height="10"/>
+                <h:panelGrid columns="3">
+                    <p:spacer width="30"/>
+                    <p:commandButton id="connectDB" value="#{msg.btn_connect}" icon="fa fa-toggle-on"
+                                     actionListener="#{databaseController.connect}" ajax="false" styleClass="pt-ext-button"
+                                     disabled="#{databaseController.connected}"/>
+                    <p:commandButton id="disconnectDB" value="#{msg.btn_disconnect} " icon="fa fa-toggle-off"
+                                     actionListener="#{databaseController.disconnect}" ajax="false" styleClass="pt-ext-button"
+                                     disabled="#{not databaseController.connected}"/>
+                </h:panelGrid>
             </h:panelGrid>
+
+            <p:spacer width="150"/>
+
+            <p:dataTable id="dbTablesTb" var="message" value="#{databaseController.registers}"
+                         selectionMode="single" selection="#{databaseController.selectedTable}" rowKey="#{message[msg.header_tables]}"
+                         sortBy="#{message[msg.header_tables]}" rendered="#{databaseController.connected}">
+                <p:ajax event="rowSelect" update="dbTablesViewBtn"/>
+                <p:ajax event="rowUnselect" update="dbTablesViewBtn"/>
+                <p:columns value="#{databaseController.columns}" var="column" columnIndexVar="colIndex">
+                    <f:facet name="header">
+                        <h:outputText value="#{column.header}"/>
+                    </f:facet>
+                    <h:outputText value="#{message[column.property]}"/>
+                </p:columns>
+                <f:facet name="footer">
+                    <p:commandButton id="dbTablesViewBtn" process="dbTablesTb" icon="ui-icon-search" value="#{msg.btn_view}"
+                                     actionListener="#{previewDBTableController.fillRecords}" ajax="false"
+                                     disabled="#{databaseController.selectedTable eq null}"/>
+                </f:facet>
+            </p:dataTable>
         </h:panelGrid>
 
     </h:form>
+
+    <p:spacer height="20"/>
+
+    <h:panelGrid rendered="#{previewDBTableController.activeTable ne null and not empty databaseController.selectedTable}">
+        <p:dataTable var="message" value="#{previewDBTableController.registers}">
+            <f:facet name="header">
+                <h:outputText value="#{previewDBTableController.activeTable}"/>
+            </f:facet>
+            <p:columns value="#{previewDBTableController.columns}" var="column" columnIndexVar="colIndex">
+                <f:facet name="header">
+                    <h:outputText value="#{column.header}"/>
+                </f:facet>
+                <h:outputText value="#{message[column.property]}"/>
+            </p:columns>
+        </p:dataTable>
+    </h:panelGrid>
 
 </ui:composition>

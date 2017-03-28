@@ -87,6 +87,7 @@ public class MainPanelController extends AbstractView {
     public void clearParameters() {
         accordionIndex = 0;
         parameterReportController.clearCurrentFile();
+        selectedSource = sourceDetailList.get(0);
     }
 
     public int getAccordionIndex() {

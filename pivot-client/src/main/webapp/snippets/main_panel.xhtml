@@ -32,13 +32,17 @@
     <h:panelGroup rendered="#{menuController.schemaEnable}">
         <p:spacer height="5"/>
         <h:form>
-            <h:panelGrid columns="2" cellpadding="5" width="500px">
-                <h:outputLabel for="cmb_source" value="#{msg.option_select_source}" styleClass="pt-label-option"/>
-                <p:selectOneMenu id="cmb_source" onchange="submit();" style="width:180px" converter="sourceDetailConverter"
-                                 valueChangeListener="#{mainPanelController.onMenuChange}"
-                                 value="#{mainPanelController.selectedSource}">
-                    <f:selectItems value="#{mainPanelController.obtainCurrentSources()}"/>
-                </p:selectOneMenu>
+            <h:panelGrid columns="2">
+                <h:panelGrid columns="1" style="width: 200px">
+                    <h:outputLabel for="cmb_source" value="#{msg.option_select_source}" styleClass="pt-label-option"/>
+                </h:panelGrid>
+                <h:panelGrid columns="1" >
+                    <p:selectOneMenu id="cmb_source" onchange="submit();" style="width:180px" converter="sourceDetailConverter"
+                                     valueChangeListener="#{mainPanelController.onMenuChange}"
+                                     value="#{mainPanelController.selectedSource}">
+                        <f:selectItems value="#{mainPanelController.obtainCurrentSources()}"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
             </h:panelGrid>
         </h:form>
         <p:spacer height="5"/>

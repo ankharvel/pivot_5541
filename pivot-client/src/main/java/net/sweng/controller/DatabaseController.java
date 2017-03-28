@@ -2,12 +2,15 @@ package net.sweng.controller;
 
 import net.sweng.domain.DatabaseParameters;
 import net.sweng.domain.DatabaseType;
+import net.sweng.domain.GenericRow;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.FacesEvent;
 import javax.faces.event.ValueChangeEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -15,7 +18,7 @@ import java.util.List;
  */
 @ManagedBean
 @SessionScoped
-public class DatabaseController extends AbstractView {
+public class DatabaseController extends AbstractTableController {
 
     private DatabaseType dbType;
     private String host;
@@ -25,6 +28,21 @@ public class DatabaseController extends AbstractView {
     private String password;
     private boolean connected;
     private boolean onChangeEvent;
+    private GenericRow selectedTable;
+
+    @Override
+    public void initialize() {
+        setColumnKeys(new String[]{bundle.getString("header_tables")});
+        createDynamicColumns();
+    }
+
+    @Override
+    public void fillRecords(FacesEvent event) {
+        List<GenericRow> data = new LinkedList<>();
+        String columnName = bundle.getString("header_tables");
+        pivotController.obtainTableNames().stream().forEach(c -> data.add(GenericRow.createSingleton(columnName, c)));
+        setRegisters(data);
+    }
 
     public void onMenuChange(ValueChangeEvent event) {
         onChangeEvent = true;
@@ -34,17 +52,19 @@ public class DatabaseController extends AbstractView {
         onChangeEvent = false;
     }
 
-    public void connect(ActionEvent event) {
+    public void connect(FacesEvent event) {
         if (connected) return;
         DatabaseParameters parameters = new DatabaseParameters(dbType, host, Integer.parseInt(port), databaseName, username, password);
         if (pivotController.connectToDB(parameters)) {
             connected = true;
+            fillRecords(event);
         }
     }
 
     public void disconnect(ActionEvent event) {
         if (!connected) return;
         connected = false;
+        selectedTable = null;
     }
 
     public List<String> databaseTables() {
@@ -112,5 +132,13 @@ public class DatabaseController extends AbstractView {
 
     public boolean isOnChangeEvent() {
         return onChangeEvent;
+    }
+
+    public GenericRow getSelectedTable() {
+        return selectedTable;
+    }
+
+    public void setSelectedTable(GenericRow selectedTable) {
+        this.selectedTable = selectedTable;
     }
 }

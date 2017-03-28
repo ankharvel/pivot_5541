@@ -25,4 +25,9 @@ public class H2QueryHelper extends AbstractQueryHelper {
         return (fileName.substring(0, fileName.indexOf(".")) + "_" + getSessionIdPrefix()).toUpperCase();
     }
 
+    @Override
+    protected String getCastToString(String columnName) {
+        return columnName;
+    }
+
 }

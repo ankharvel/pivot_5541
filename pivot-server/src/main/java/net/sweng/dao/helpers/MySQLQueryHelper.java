@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
  * Created on 3/27/17.
  */
 @Service
-public class PostgreSQLQueryHelper extends AbstractQueryHelper {
+public class MySQLQueryHelper extends AbstractQueryHelper {
 
     @Override
     protected String getCastedColumn(ColumnDetail column) {
@@ -21,6 +21,6 @@ public class PostgreSQLQueryHelper extends AbstractQueryHelper {
 
     @Override
     protected String getCastToString(String columnName) {
-        return "CAST(" + columnName + " as VARCHAR)";
+        return "CAST(" + columnName + " as CHAR)";
     }
 }

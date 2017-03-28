@@ -229,6 +229,10 @@ body {
     font-weight: bolder;
 }
 
+.pt-db-grid tr {
+    vertical-align: top;
+}
+
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
     background: linear-gradient(to right, ghostwhite,#CFD6DE,#7297BA,#CFD6DE,ghostwhite);
     color: white;
@@ -244,4 +248,11 @@ body {
     visibility: collapse;
     height: 0px;
 }
+
+#dbForm .ui-datatable-tablewrapper {
+    overflow: auto;
+    width:350px;
+    height:210px;
+}
+
 

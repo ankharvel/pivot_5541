@@ -43,13 +43,13 @@ public class MenuController extends AbstractView {
     }
 
     public void setSchema(ActionEvent event) {
-        if(getSessionAttribute(FILE_AVAILABLE, Boolean.class)) {
+//        if(getSessionAttribute(FILE_AVAILABLE, Boolean.class)) {
             menuTitle = bundle.getString("subtitle_schema");
             iconClass = "fa fa-expand";
             enableView(SCHEMA);
-        } else {
-            addMessage(bundle.getString("err_unable_execute"), bundle.getString("adv_upload_first"), FacesMessage.SEVERITY_FATAL);
-        }
+//        } else {
+//            addMessage(bundle.getString("err_unable_execute"), bundle.getString("adv_upload_first"), FacesMessage.SEVERITY_FATAL);
+//        }
     }
 
     public void setRelations(ActionEvent event) {

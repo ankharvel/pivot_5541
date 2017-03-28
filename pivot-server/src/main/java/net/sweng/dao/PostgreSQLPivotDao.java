@@ -29,6 +29,9 @@ public class PostgreSQLPivotDao extends AbstractPivotDao {
     private static final String TEST_DB =
             "SELECT current_date";
 
+    private static final String SELECT =
+            "SELECT * FROM {0} ";
+
     private static final String SELECT_HEADERS =
             "SELECT column_name " +
             "FROM information_schema.columns " +
@@ -51,8 +54,13 @@ public class PostgreSQLPivotDao extends AbstractPivotDao {
     private QueryHelper queryHelper;
 
     @Override
-    public TableData getRecords(String sourcePath) {
-        return null;
+    public TableData getRecords(String tableName) {
+        List<String> columns = getHeaders(tableName);
+        String[] columnNames = columns.toArray(new String[columns.size()]);
+
+        List<GenericRow> data = jdbcTemplate.query(
+                MessageFormat.format(SELECT, tableName), new GenericRowMapper(columns));
+        return new TableData(columnNames, data);
     }
 
     @Override

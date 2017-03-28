@@ -16,7 +16,7 @@
             <p:fieldset id="dragSourceArea" legend="#{msg.header_source}">
                 <p:dataGrid id="dropSourceArea" var="selectableColumn" value="#{parameterReportController.columnSource}" columns="1">
                     <p:panel id="dragColumnSourcePnl">
-                        <h:outputText value="#{selectableColumn[msg.header_column]}" style="text-align: left"/>
+                        <h:outputText value="#{parameterReportController.formatDroppableValue(selectableColumn[msg.header_column])}" style="text-align: left"/>
                         <i class="fa fa-paper-plane" style="float:right; color:#F2BC00"/>
                     </p:panel>
                     <p:draggable for="dragColumnSourcePnl" revert="true" handle=".ui-panel-content" stack=".ui-panel"/>
@@ -30,7 +30,7 @@
                     <p:dataGrid id="dropRowsData" var="selectableColumn" value="#{parameterReportController.reportRows}"
                                 columns="1" rendered="#{not empty parameterReportController.reportRows}">
                         <p:panel>
-                            <h:outputText value="#{selectableColumn[msg.header_column]}" style="text-align:left"/>
+                            <h:outputText value="#{parameterReportController.formatDroppableValue(selectableColumn[msg.header_column])}" style="text-align:left"/>
                             <p:commandButton id="removeRowBtn" process="dragRowsArea" icon="ui-icon-closethick" value=""
                                              action="#{parameterReportController.removeRow(selectableColumn)}"
                                              ajax="false" update="dropSourceArea dropRowsArea" styleClass="pt-drag-menu-closable-icon"/>
@@ -46,7 +46,7 @@
                     <p:dataGrid var="selectableColumn" value="#{parameterReportController.reportColumns}"
                                 columns="1" rendered="#{not empty parameterReportController.reportColumns}">
                         <p:panel>
-                            <h:outputText value="#{selectableColumn[msg.header_column]}" style="text-align: left"/>
+                            <h:outputText value="#{parameterReportController.formatDroppableValue(selectableColumn[msg.header_column])}" style="text-align: left"/>
                             <p:commandButton id="removeColBtn" process="dragColumnsArea" icon="ui-icon-closethick" value=""
                                              action="#{parameterReportController.removeColumn(selectableColumn)}"
                                              ajax="false" update="dropSourceArea dropColumnsArea" styleClass="pt-drag-menu-closable-icon"/>
@@ -62,7 +62,7 @@
                     <p:dataGrid var="selectableColumn" value="#{parameterReportController.reportFilters}"
                                 columns="1" rendered="#{not empty parameterReportController.reportFilters}">
                         <p:panel>
-                            <h:outputText value="#{selectableColumn[msg.header_column]}" style="text-align: left"/>
+                            <h:outputText value="#{parameterReportController.formatDroppableValue(selectableColumn[msg.header_column])}" style="text-align: left"/>
                             <p:commandButton id="removeFilterBtn" process="dragFiltersArea" icon="ui-icon-closethick" value=""
                                              action="#{parameterReportController.removeFilter(selectableColumn)}"
                                              ajax="false" update="dropSourceArea dropFiltersArea" styleClass="pt-drag-menu-closable-icon"/>
@@ -89,7 +89,7 @@
                     <p:dataGrid var="selectableColumn" value="#{parameterReportController.reportField}"
                                 columns="1" rendered="#{not empty parameterReportController.reportField}">
                         <p:panel>
-                            <h:outputText value="#{selectableColumn[msg.header_column]}" style="text-align: left"/>
+                            <h:outputText value="#{parameterReportController.formatDroppableValue(selectableColumn[msg.header_column])}" style="text-align: left"/>
                             <p:commandButton id="removeFieldBtn" process="dragFieldsArea" icon="ui-icon-closethick" value=""
                                              action="#{parameterReportController.removeField(selectableColumn)}"
                                              ajax="false" update="dropSourceArea dropFieldsArea" styleClass="pt-drag-menu-closable-icon"/>

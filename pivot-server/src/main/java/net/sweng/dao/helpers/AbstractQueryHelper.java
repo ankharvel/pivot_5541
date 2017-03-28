@@ -94,7 +94,7 @@ public abstract class AbstractQueryHelper implements QueryHelper {
         if(!rows.isEmpty()) {
             sql.append(" WHERE ");
             for(ColumnDetail detail: rows) {
-                sql.append(detail.getColumnName()).append(" = ").append("?");
+                sql.append(getCastToString(detail.getColumnName())).append(" = ").append("?");
                 sql.append(" AND ");
             }
             sql.delete(sql.lastIndexOf("AND "), sql.length());
@@ -136,6 +136,8 @@ public abstract class AbstractQueryHelper implements QueryHelper {
     protected abstract String getCastedColumn(ColumnDetail column);
 
     protected abstract String getTableName(String fileName);
+
+    protected abstract String getCastToString(String columnName);
 
 
 }

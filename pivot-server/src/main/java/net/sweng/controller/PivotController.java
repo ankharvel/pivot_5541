@@ -40,6 +40,16 @@ public class PivotController {
         }
     }
 
+    public TableData readTable(String tableNaeme) {
+        try {
+            return daoFactory.getDao().getRecords(tableNaeme);
+        } catch (Exception ex) {
+            Logger.getGlobal().log(Level.SEVERE, ex.getMessage(), ex);
+            return null;
+        }
+    }
+
+
     public List<String> readCSVHeaders(String fileName) {
         try {
             return pivotDao.getHeaders(getSourcePath(fileName));
