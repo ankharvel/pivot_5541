@@ -18,7 +18,14 @@
                     <p:ajax event="cellEdit" listener="#{columnTypeTableController.onCellEdit}" update=":leftMenu:messages" />
 
                     <p:column headerText="#{msg.header_column}">
-                        <h:outputText style="float: left;text-align:start" value="#{message[msg.header_column]}" />
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText style="float: left;text-align:start" value="#{message[msg.header_column]}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText id="modelInput" value="#{message[msg.header_column]}" style="width:100%"/>
+                            </f:facet>
+                        </p:cellEditor>
                     </p:column>
 
                     <p:column headerText="#{msg.header_type}">
