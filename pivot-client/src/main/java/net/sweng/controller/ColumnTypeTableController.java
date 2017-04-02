@@ -59,6 +59,7 @@ public class ColumnTypeTableController extends AbstractTableController implement
         for(String h: headers) {
             GenericRow record = new GenericRow();
             record.put(bundle.getString("header_column"), h);
+            record.put(bundle.getString("header_column_alias"), h);
             record.put(bundle.getString("header_type"), tableSchema.getColumnType(h));
             data.add(record);
         }

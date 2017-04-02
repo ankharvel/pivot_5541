@@ -4,26 +4,30 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
         >
-    <h:panelGrid id="setTypeGrid" columns="2" rendered="#{columnTypeTableController.enableView}">
+    <h:panelGrid id="setTypeGrid" columns="3" rendered="#{columnTypeTableController.enableView}">
         <p:spacer width="10"/>
 
         <h:panelGrid rendered="#{columnTypeTableController.activeTable ne null}" style="vertical-align: top">
             <h:form>
                 <p:dataTable id="columnTypesTb" var="message" value="#{columnTypeTableController.registers}"
-                             editable="true" editMode="cell" widgetVar="cellcolType" style="width: 250px">
+                             editable="true" editMode="cell" widgetVar="cellcolType" style="width: 512px">
                     <f:facet name="header">
                         <h:outputText value="#{columnTypeTableController.activeTable}"/>
                     </f:facet>
 
-                    <p:ajax event="cellEdit" listener="#{columnTypeTableController.onCellEdit}" update=":leftMenu:messages" />
-
+                    <!--p:ajax event="cellEdit" listener="#{columnTypeTableController.onCellEdit}" update=":leftMenu:messages" /-->
+                    
                     <p:column headerText="#{msg.header_column}">
+                        <h:outputText style="float: left;text-align:start" value="#{message[msg.header_column]}" />
+                    </p:column>    
+
+                    <p:column headerText="#{msg.header_column_alias}">
                         <p:cellEditor>
                             <f:facet name="output">
-                                <h:outputText style="float: left;text-align:start" value="#{message[msg.header_column]}" />
+                                <h:outputText style="float: left;text-align:start" value="#{message[msg.header_column_alias]}" />
                             </f:facet>
                             <f:facet name="input">
-                                <p:inputText id="modelInput" value="#{message[msg.header_column]}" style="width:100%"/>
+                                <p:inputText id="modelInput" value="#{message[msg.header_column_alias]}" style="width:100%"/>
                             </f:facet>
                         </p:cellEditor>
                     </p:column>
