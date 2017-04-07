@@ -3,6 +3,7 @@ package net.sweng.controller;
 import net.sweng.domain.DatabaseParameters;
 import net.sweng.domain.DatabaseType;
 import net.sweng.domain.GenericRow;
+import net.sweng.domain.exceptions.InvalidDatabaseConnection;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -53,11 +54,14 @@ public class DatabaseController extends AbstractTableController {
     }
 
     public void connect(FacesEvent event) {
-        if (connected) return;
-        DatabaseParameters parameters = new DatabaseParameters(dbType, host, Integer.parseInt(port), databaseName, username, password);
-        if (pivotController.connectToDB(parameters)) {
+        try {
+            if (connected) return;
+            DatabaseParameters parameters = new DatabaseParameters(dbType, host, Integer.parseInt(port), databaseName, username, password);
+            pivotController.connectToDB(parameters);
             connected = true;
             fillRecords(event);
+        } catch (InvalidDatabaseConnection ex) {
+            addErrorMessage(ex.getMessage());
         }
     }
 

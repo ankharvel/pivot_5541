@@ -8,6 +8,7 @@ import net.sweng.domain.DatabaseParameters;
 import net.sweng.domain.ReportParameters;
 import net.sweng.domain.TableData;
 import net.sweng.domain.exceptions.InvalidDataTypeException;
+import net.sweng.domain.exceptions.InvalidDatabaseConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -93,13 +94,13 @@ public class PivotController {
         }
     }
 
-    public boolean connectToDB(DatabaseParameters dbParameters) {
+    public void connectToDB(DatabaseParameters dbParameters) throws InvalidDatabaseConnection {
         try {
             daoFactory.createConnection(dbParameters);
-            return true;
         } catch (Exception ex) {
-            Logger.getGlobal().log(Level.SEVERE, "Invalid database credentials: " + DBConfig.getSessionIdPrefix());
-            return false;
+            String msg = "Invalid database credentials";
+            Logger.getGlobal().log(Level.SEVERE, msg + ". ClientID: " +  DBConfig.getSessionIdPrefix());
+            throw new InvalidDatabaseConnection(msg);
         }
     }
 
